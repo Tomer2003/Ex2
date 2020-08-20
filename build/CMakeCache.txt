@@ -335,12 +335,6 @@ matrix2_BINARY_DIR:STATIC=/home/tomer/Advanced Programmin 1/Ex2/build
 //Value Computed by CMake
 matrix2_SOURCE_DIR:STATIC=/home/tomer/Advanced Programmin 1/Ex2
 
-//Value Computed by CMake
-matrix_BINARY_DIR:STATIC=/home/tomer/Advanced Programmin 1/Ex2/build
-
-//Value Computed by CMake
-matrix_SOURCE_DIR:STATIC=/home/tomer/Advanced Programmin 1/Ex2
-
 
 ########################
 # INTERNAL cache entries
