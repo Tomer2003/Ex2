@@ -11,7 +11,7 @@ void printMatrix(const Matrix::Matrix& matrix){
 }
 */
 int main() {
-    matrix::Matrix A(2, 2);
+    matrix::Matrix a(1, 1);
   /*  A.matrixSetValue(0, 0, 1);
     A.matrixSetValue(1, 0, 5);
     A.matrixSetValue(0, 1, 1);

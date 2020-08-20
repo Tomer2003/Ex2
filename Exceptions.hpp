@@ -32,5 +32,10 @@ public:
     void printException();
 };
 
+/**
+ * @brief The function throw appopriate error according error code
+ * 
+ * @param code - code to ErrorCode
+ */
 void throwAppopriateError(ErrorCode code);
 }

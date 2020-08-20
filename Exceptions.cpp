@@ -5,50 +5,38 @@
 
 namespace Exceptions {
 
-class ErrorExceedMatrix {
-public:
-    void printException() {
-        std::cout << "ERROR: The column or row index given exceed the matrix boundaries!" << std::endl;
-    }
-};
+void ErrorExceedMatrix::printException(){
+    std::cout << "ERROR: The column or row index given exceed the matrix boundaries!" << std::endl;
+}
 
-class ErrorCantAdd {
-public:
-    void printException() {
-        std::cout << "ERROR: The matrix sizes are not equal and therefore it is not possible to perform an add operation" << std::endl;
-    }
-};
 
-class ErrorCantMult {
-public:
-    void printException() {
-        std::cout << "ERROR: The number of rows in the left matrix is not equal to the number of columns in the right matrix and therefore it is not possible to perform a multiplication operation" << std::endl;
-    }
-};
+void ErrorCantAdd::printException(){
+    std::cout << "ERROR: The matrix sizes are not equal and therefore it is not possible to perform an add operation" << std::endl;
+}
 
-class ErrorNullMatrix {    
-public:
-    void printException() {
-        std::cout << "ERROR: The matrix that given is null!" << std::endl;
-    }
-};
+void ErrorCantMult::printException(){
+    std::cout << "ERROR: The number of rows in the left matrix is not equal to the number of columns in the right matrix and therefore it is not possible to perform a multiplication operation" << std::endl;
+}
 
-class ErrorCantAllocateMatrix {
-public:
-    void printException() {
-        std::cout << "Error: The memory allocation has failed" << std::endl;
-    }
-};
+void ErrorNullMatrix::printException(){
+     std::cout << "ERROR: The matrix that given is null!" << std::endl;
+}
 
-class ErrorMatrixSizeNotAppopriate {
-public:
-    void printException() {
-        std::cout << "The height or width given in create matrix function to the matrix is 0!" << std::endl;
-    }
-};
+void ErrorCantAllocateMatrix::printException(){
+    std::cout << "Error: The memory allocation has failed" << std::endl;
+}
 
+void ErrorMatrixSizeNotAppopriate::printException(){
+    std::cout << "The height or width given in create matrix function to the matrix is 0!" << std::endl;
+}
+
+/**
+ * @brief The function throw appopriate error according error code
+ * 
+ * @param code - code to ErrorCode
+ */
 void throwAppopriateErrorIfHas(ErrorCode code){
-    switch (code) {
+	switch (code) {
 		case EXCEED_MATRIX_SIZE_ERROR:
 			throw ErrorExceedMatrix();
 		case MATRIX_ADD_ERROR:
@@ -61,7 +49,6 @@ void throwAppopriateErrorIfHas(ErrorCode code){
 			throw ErrorCantAllocateMatrix();
 		case MATRIX_SIZE_NOT_APPOPRIATE:
 			throw ErrorMatrixSizeNotAppopriate();
-		default:
+		}
 	}
-}
 }

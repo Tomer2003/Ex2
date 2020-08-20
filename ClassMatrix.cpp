@@ -1,9 +1,10 @@
 #include <iostream>
 #include "ClassMatrix.hpp"
 #include "Exceptions.hpp"
+#include "Matrix.h"
 
 namespace matrix{
-    Matrix::Matrix(const uint32_t height, const uint32_t width) :width(width), height(height){
+    Matrix::Matrix(const uint32_t heightMatrix, const uint32_t widthMatrix) :width(widthMatrix), height(heightMatrix){
         Exceptions::throwAppopriateError(matrix_create(&this->pMatrix, height, width));
     }
 
@@ -12,7 +13,7 @@ namespace matrix{
     }
 
     Matrix::Matrix(Matrix&& matrix) :width(matrix.width), height(matrix.height){
-        this->pMatrix = matrix.pMatrix;
+        pMatrix = matrix.pMatrix;
         matrix.pMatrix = nullptr;
     }
 
@@ -91,4 +92,4 @@ namespace matrix{
     Matrix operator*(double scalar, Matrix& matrix){
         return matrix * scalar;
     }  
-};
+}
