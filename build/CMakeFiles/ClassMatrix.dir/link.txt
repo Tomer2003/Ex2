@@ -1,0 +1,1 @@
+/bin/c++ -fPIC -g  -shared -Wl,-soname,libClassMatrix.so -o libClassMatrix.so CMakeFiles/ClassMatrix.dir/ClassMatrix.cpp.o 

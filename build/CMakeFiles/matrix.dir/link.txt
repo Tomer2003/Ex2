@@ -1,0 +1,1 @@
+/bin/c++  -g  -rdynamic CMakeFiles/matrix.dir/main.cpp.o  -o matrix  -lSHARED -lmatrix "/home/tomer/Advanced Programmin 1/Ex2ClassMatrix.cpp" 
