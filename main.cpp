@@ -2,8 +2,8 @@
 
 int main() {
 
-std::unique_ptr<BitMapManipulator::bitMapAbstract> BitMap = BitMapManipulator::BitMapFactory::fromFile("lena.bmp");
-
+std::unique_ptr<BitMapManipulator::bitMapAbstract> BitMap = BitMapManipulator::BitMapFactory::fromFile("lena-color.bmp");
+BitMap->toFile("capara.bmp");
 
 
 

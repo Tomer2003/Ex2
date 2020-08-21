@@ -151,10 +151,37 @@ public:
 
         bitMapArray.resize(height * width * bytesPerPixel);
         for(size_t row = 0; row < height; ++row) {
-            imageFile.read((char *) &bitMapArray[width * row], width);
+            imageFile.read((char *) &bitMapArray[width * row], width * bytesPerPixel);
             size_t pos = imageFile.tellg();
             imageFile.seekg(4 - (width % 4), std::ios_base::cur);
         }
+    }
+
+    void toFile(const std::string imagePath) {
+        std::ofstream imageFile;
+        imageFile.open(imagePath, std::ios::binary | std::ios::trunc);
+        if (!imageFile.is_open()) {
+           return; /* write an exception class*/
+        }
+
+
+        imageFile.write((char*) &headerInfo, sizeof(Header));
+        imageFile.write((char*) &DIBHeaderInfo, sizeof(DIBHeader));
+        size_t collorPalleteSize = collorPallete.size();
+        if (collorPalleteSize > 0) {
+            imageFile.write((char*) &collorPallete[0], sizeof(colorTupple) * collorPalleteSize);
+        }
+
+        size_t width = this->getWidth();
+        size_t height = this->getHeight();
+        size_t bytesPerPixel = this->getBytesPerPIxel();
+        
+        const char pedding[3] = {0, 0, 0};
+        for (int row = 0; row < height; ++row) {
+            imageFile.write((char*) &byteArray[row * width], width * bytesPerPixel);
+            imageFile.write(pedding, 4 - width % 4);////////////////////////////////////////////////
+        }
+        
     }
 
     size_t getHeight() const{
@@ -236,6 +263,7 @@ public:
         bitMap->fromFile(imageFile);
         return bitMap;
     }
+
 
 };
 
