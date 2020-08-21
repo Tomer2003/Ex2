@@ -1,0 +1,18 @@
+struct info
+
+color tupple
+
+pixel tupple
+
+
+classabstract bmp24bits {
+
+info
+bitMaparray
+
+}
+
+
+#pragma pack(push[1])
+
+#pragma pack(pop)
