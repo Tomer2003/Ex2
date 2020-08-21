@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iterator>
 #include <string>
-
+#include "Exceptions.hpp"
 /**
  * @brief Read the content of a file at path filePath.
  *
@@ -15,7 +15,7 @@ std::string readFileContent(const std::string& filePath) {
   // The file is in a bad state. The error can be retrieved
   //	using the global `errno` in linux (#include <cerrno>).
   if (!in) {
-    // Error here...
+    throw FileExceptions::OpenFileExceptionForReading();
   }
 
   // Read the file to a vector. This is not the most effecient
@@ -26,7 +26,7 @@ std::string readFileContent(const std::string& filePath) {
   // After reading the file, it should meet EOF (end of file). If
   //  it did not, it means that an error occurred.
   if (!in.eof()) {
-    // Unlikly to happen error here...
+    throw FileExceptions::ReadFileException();
   }
 
   return content;
@@ -46,11 +46,11 @@ void writeFileContent(const std::string& filePath, const std::string& content) {
 
   // The file is in a bad state.
   if (!out) {
-    // Error here...
+    throw FileExceptions::OpenFileExceptionForWriting();
   }
 
   out.write(content.data(), static_cast<std::streamsize>(content.length()));
   if (!out) {
-    // Unlikly to happen error here...
+    throw FileExceptions::WriteFileException();
   }
 }
