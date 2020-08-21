@@ -7,7 +7,7 @@
 
 #pragma pack(push,1)
 
-namespace reader {
+namespace BitMapManipulator {
 
 const uint16_t BMPmagic = ((uint16_t)'B') + (((uint16_t)'M') << 8);
 struct Header {
@@ -50,7 +50,7 @@ struct DIBHeader
     uint32_t width;
     uint32_t height;
     uint16_t constant;
-    uint16_t bytesPerPixel;
+    uint16_t bitesPerPixel;
     uint32_t compressionIndex1;
     uint32_t compressionIndex2;
     uint32_t reserved1;
@@ -69,11 +69,10 @@ void fromfStream(std::ifstream& imageFile) {
     if(this->sizeOfHeader != sizeof(*this)) {
           return; /*exception*/
     }
-    if (this->colorsInColorPallete != 0 && this->bytesPerPixel != 8) {
+    if (this->colorsInColorPallete != 0 && this->bitesPerPixel != 8) {
          return; /*exception*/
     }
-    
-    
+
 }
 
 
@@ -112,8 +111,11 @@ struct pixel8Bits : public pixelAbstract
 };
 
 #pragma pack(pop)
-class bitMapAbstract{
 
+class bitMap8Bits;
+class bitMap24Bits;
+
+class bitMapAbstract{
 
 protected:
     typedef std::vector<colorTupple> ColorPalleteType;
@@ -127,37 +129,8 @@ private:
 
 
 public:
-    bitMapAbstract(const Header& headerInfo, const DIBHeader& DIBHeaderInfo, std::ifstream& imageFile) 
+    bitMapAbstract(const Header& headerInfo, const DIBHeader& DIBHeaderInfo) 
     : headerInfo(headerInfo), DIBHeaderInfo(DIBHeaderInfo) {
-        this->fromFile(imageFile);
-    }
-
-
-    static /*bitMapAbstract&*/ void fromFile(const std::string& imagePath) {
-
-        std::ifstream imageFile;
-        imageFile.open(imagePath, std::ios::binary);
-        if (!imageFile.is_open()) {
-           return; /* write an exception class*/
-        }
-
-        Header header;
-        DIBHeader dibInfo;
-        
-        header.fromfStream(imageFile);
-
-        dibInfo.fromfStream(imageFile);
-
-        size_t bitsPerPixel = dibInfo.bytesPerPixel;
-        std::unique_ptr<bitMapAbstract> bitMap = nullptr;
-        if (bitsPerPixel == 8) {
-            bitMap = std::make_unique<bitMap8Bits>(header, dibInfo, imageFile);
-        } else if (bitsPerPixel == 24) {
-            bitMap = std::make_unique<bitMap24Bits>(header, dibInfo, imageFile);
-        } else {
-            return; /* write an exception class*/
-        }
-    
     }
 
     void fromFile(std::ifstream& imageFile) {
@@ -194,7 +167,7 @@ public:
         return collorPallete;
     }
     size_t getBytesPerPIxel() const {
-        return this->DIBHeaderInfo.bytesPerPixel;
+        return this->DIBHeaderInfo.bitesPerPixel / 8;
     }
     IntensityType& getBitMapArray() {
         return this->byteArray;
@@ -206,8 +179,8 @@ class bitMap8Bits : public bitMapAbstract {
 private:
     const size_t ColorPalleteSize = 256;
 public:
-    bitMap8Bits(const Header& header, const DIBHeader& dibHeader, std::ifstream& imageFile)
-    :bitMapAbstract::bitMapAbstract(header, dibHeader, imageFile) {
+    bitMap8Bits(const Header& header, const DIBHeader& dibHeader)
+    :bitMapAbstract::bitMapAbstract(header, dibHeader) {
     }
 
     size_t virtual getColorPaleeteSize() const {
@@ -221,14 +194,48 @@ private:
     typedef pixel24Bits pixelType;
     const size_t ColorPalleteSize = 0;
 public:
-    bitMap24Bits(const Header& header, const DIBHeader& dibHeader, std::ifstream& imageFile)
-    :bitMapAbstract::bitMapAbstract(header, dibHeader, imageFile) {
+    bitMap24Bits(const Header& header, const DIBHeader& dibHeader)
+    :bitMapAbstract::bitMapAbstract(header, dibHeader) {
     }
 
     size_t virtual getColorPaleeteSize() const {
         return ColorPalleteSize;
     }
 
+
+};
+
+class BitMapFactory {
+public:
+    static std::unique_ptr<bitMapAbstract> fromFile(const std::string& imagePath) {
+
+        std::ifstream imageFile;
+        imageFile.open(imagePath, std::ios::binary);
+        if (!imageFile.is_open()) {
+           return nullptr; /* write an exception class*/
+        }
+
+        Header header;
+        DIBHeader dibInfo;
+        
+        header.fromfStream(imageFile);
+        dibInfo.fromfStream(imageFile);
+
+        size_t bitsPerPixel = dibInfo.bitesPerPixel;
+        std::unique_ptr<bitMapAbstract> bitMap = nullptr;
+
+        if (bitsPerPixel == 8) {
+            bitMap = std::unique_ptr<bitMap8Bits>{new bitMap8Bits(header, dibInfo)};
+            //bitMap = std::make_unique<bitMap8Bits>(header, dibInfo, imageFile);
+        } else if (bitsPerPixel == 24) {
+            bitMap = std::unique_ptr<bitMap24Bits>{new bitMap24Bits(header, dibInfo)};
+            //bitMap = std::make_unique<bitMap24Bits>(header, dibInfo, imageFile);
+        } else {
+            return nullptr; /* write an exception class*/
+        }
+        bitMap->fromFile(imageFile);
+        return bitMap;
+    }
 
 };
 

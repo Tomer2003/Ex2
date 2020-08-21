@@ -2,7 +2,7 @@
 
 int main() {
 
-reader::bitMapAbstract::fromFile("lena.bmp");
+std::unique_ptr<BitMapManipulator::bitMapAbstract> BitMap = BitMapManipulator::BitMapFactory::fromFile("lena.bmp");
 
 
 
