@@ -1,6 +1,9 @@
 #include <stdint.h>
 #include <iostream>
 #include <fstream>
+#include <memory>
+#include <vector>
+
 
 #pragma pack(push,1)
 
@@ -18,10 +21,12 @@ struct Header {
 
 public:
 
-void fromFile(std::ifstream& imageFile) {
+void fromfStream(std::ifstream& imageFile) {
     
     imageFile.read((char *) this,sizeof(Header));
-
+    if (!imageFile) {
+        return; /*exception*/
+    }
     if (signature != BMPmagic) {
         return; /*exception*/
     }
@@ -55,20 +60,19 @@ struct DIBHeader
 
 public: 
     
-void fromFile(std::ifstream& imageFile) {
+void fromfStream(std::ifstream& imageFile) {
     
     imageFile.read((char *) this,sizeof(DIBHeader));
+    if (!imageFile) {
+        return; /*exception*/
+    }
     if(this->sizeOfHeader != sizeof(*this)) {
           return; /*exception*/
     }
     if (this->colorsInColorPallete != 0 && this->bytesPerPixel != 8) {
          return; /*exception*/
     }
-    if (this->colorsInColorPallete == 8) {
-        if (this->bytesPerPixel == 0) {
-            this->colorsInColorPallete = 2 ^ this->bytesPerPixel;
-        }
-    }
+    
     
 }
 
@@ -107,25 +111,28 @@ struct pixel8Bits : public pixelAbstract
     uint8_t intensity;
 };
 
-const size_t palleteSize8Bits = 256;
-
-template <size_t T> struct CollorPallete
-{
-    colorTupple pallete[T];
-};
-
-typedef struct CollorPallete<palleteSize8Bits> CollorPallete8Bits;
-
 #pragma pack(pop)
 class bitMapAbstract{
+
+
+protected:
+    typedef std::vector<colorTupple> ColorPalleteType;
+    typedef std::vector<uint8_t> IntensityType;
 
 private:
     Header headerInfo;
     DIBHeader DIBHeaderInfo;
-    CollorPallete8Bits* pointerPallete = nullptr;
-    pixelAbstract* bitMapArray = nullptr;
+    ColorPalleteType collorPallete;
+    IntensityType byteArray;
+
 
 public:
+    bitMapAbstract(const Header& headerInfo, const DIBHeader& DIBHeaderInfo, std::ifstream& imageFile) 
+    : headerInfo(headerInfo), DIBHeaderInfo(DIBHeaderInfo) {
+        this->fromFile(imageFile);
+    }
+
+
     static /*bitMapAbstract&*/ void fromFile(const std::string& imagePath) {
 
         std::ifstream imageFile;
@@ -137,23 +144,92 @@ public:
         Header header;
         DIBHeader dibInfo;
         
-        header.fromFile(imageFile);
+        header.fromfStream(imageFile);
 
-        dibInfo.fromFile(imageFile);
+        dibInfo.fromfStream(imageFile);
+
+        size_t bitsPerPixel = dibInfo.bytesPerPixel;
+        std::unique_ptr<bitMapAbstract> bitMap = nullptr;
+        if (bitsPerPixel == 8) {
+            bitMap = std::make_unique<bitMap8Bits>(header, dibInfo, imageFile);
+        } else if (bitsPerPixel == 24) {
+            bitMap = std::make_unique<bitMap24Bits>(header, dibInfo, imageFile);
+        } else {
+            return; /* write an exception class*/
+        }
+    
+    }
+
+    void fromFile(std::ifstream& imageFile) {
+
+        size_t colorPalleteSize = this->getColorPaleeteSize();
+        ColorPalleteType& colorPallete = getColorPallete();
+        colorPallete.resize(colorPalleteSize);
         
-       
+        imageFile.read((char *) &colorPallete[0], colorPalleteSize * sizeof(colorTupple));
+        if (!imageFile) {
+            return; /*exception*/
+        }
+        
+        size_t width = this->getWidth();
+        size_t height = this->getHeight();
+        size_t bytesPerPixel = this->getBytesPerPIxel();
+        IntensityType& bitMapArray = getBitMapArray();
+
+        bitMapArray.resize(height * width * bytesPerPixel);
+        for(size_t row = 0; row < height; ++row) {
+            imageFile.read((char *) &bitMapArray[width * row], width);
+            size_t pos = imageFile.tellg();
+            imageFile.seekg(4 - (width % 4), std::ios_base::cur);
+        }
+    }
+
+    size_t getHeight() const{
+        return this->DIBHeaderInfo.height;
+    }
+    size_t getWidth() const{
+        return this->DIBHeaderInfo.width;
+    }
+    ColorPalleteType& getColorPallete() {
+        return collorPallete;
+    }
+    size_t getBytesPerPIxel() const {
+        return this->DIBHeaderInfo.bytesPerPixel;
+    }
+    IntensityType& getBitMapArray() {
+        return this->byteArray;
+    }
+    size_t virtual getColorPaleeteSize() const = 0;
+};
+
+class bitMap8Bits : public bitMapAbstract {
+private:
+    const size_t ColorPalleteSize = 256;
+public:
+    bitMap8Bits(const Header& header, const DIBHeader& dibHeader, std::ifstream& imageFile)
+    :bitMapAbstract::bitMapAbstract(header, dibHeader, imageFile) {
+    }
+
+    size_t virtual getColorPaleeteSize() const {
+        return ColorPalleteSize;
     }
 
 };
 
-class bitMap8Bits : public bitMapAbstract {
-
-    typedef pixel8Bits pixelType;
-};
-
 class bitMap24Bits : public bitMapAbstract {
-
+private:
     typedef pixel24Bits pixelType;
+    const size_t ColorPalleteSize = 0;
+public:
+    bitMap24Bits(const Header& header, const DIBHeader& dibHeader, std::ifstream& imageFile)
+    :bitMapAbstract::bitMapAbstract(header, dibHeader, imageFile) {
+    }
+
+    size_t virtual getColorPaleeteSize() const {
+        return ColorPalleteSize;
+    }
+
+
 };
 
 
