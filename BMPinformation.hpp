@@ -9,7 +9,8 @@
 
 namespace BitMapManipulator {
 
-const uint16_t BMPmagic = ((uint16_t)'B') + (((uint16_t)'M') << 8);
+const uint16_t BMPmagic = ((uint16_t)'B') + (((uint16_t)'M') << 8); //BM
+const uint16_t Size0fDIBHeader = 40;
 struct Header {
 
     uint16_t signature;
@@ -62,7 +63,7 @@ public:
     
 void fromfStream(std::ifstream& imageFile) {
     
-    imageFile.read((char *) this,sizeof(DIBHeader));
+    imageFile.read((char *) this, sizeof(DIBHeader));
     if (!imageFile) {
         return; /*exception*/
     }
@@ -86,29 +87,6 @@ struct colorTupple {
     uint8_t pedding;
 };
 
-struct fullColorPixel
-{
-    uint8_t blue;
-    uint8_t green;
-    uint8_t red;
-
-};
-struct pixelAbstract
-{
-
-};
-
-struct pixel24Bits : public pixelAbstract
-{
-    uint8_t blue;
-    uint8_t green;
-    uint8_t red;
-};
-
-struct pixel8Bits : public pixelAbstract
-{
-    uint8_t intensity;
-};
 
 #pragma pack(pop)
 
@@ -124,7 +102,7 @@ protected:
 private:
     Header headerInfo;
     DIBHeader DIBHeaderInfo;
-    ColorPalleteType collorPallete;
+    ColorPalleteType colorPallete;
     IntensityType byteArray;
 
 
@@ -134,26 +112,39 @@ public:
     }
 
     void fromFile(std::ifstream& imageFile) {
-
-        size_t colorPalleteSize = this->getColorPaleeteSize();
-        ColorPalleteType& colorPallete = getColorPallete();
-        colorPallete.resize(colorPalleteSize);
         
+        size_t colorPalleteSize = 0;
+        if (DIBHeaderInfo.colorsInColorPallete == 0) {
+        colorPalleteSize = this->getColorPalleteSize();
+        } else {
+        colorPalleteSize = DIBHeaderInfo.colorsInColorPallete;
+        }
+
+        /*ColorPalleteType& colorPallete = getColorPallete();
+        colorPallete.resize(colorPalleteSize);*/
+        colorPallete.resize(colorPalleteSize);
+
+        int i = imageFile.tellg();//////
         imageFile.read((char *) &colorPallete[0], colorPalleteSize * sizeof(colorTupple));
         if (!imageFile) {
             return; /*exception*/
         }
-        
+        i = imageFile.tellg();///////
         size_t width = this->getWidth();
         size_t height = this->getHeight();
         size_t bytesPerPixel = this->getBytesPerPIxel();
-        IntensityType& bitMapArray = getBitMapArray();
+        /*IntensityType& bitMapArray = getBitMapArray();*/
 
-        bitMapArray.resize(height * width * bytesPerPixel);
+        byteArray.resize(height * width * bytesPerPixel);
+        size_t peddingPerLine = 0;
+        if (width % 4 != 0) {
+            peddingPerLine = 4 - (width % 4);
+        }
+
         for(size_t row = 0; row < height; ++row) {
-            imageFile.read((char *) &bitMapArray[width * row], width * bytesPerPixel);
-            size_t pos = imageFile.tellg();
-            imageFile.seekg(4 - (width % 4), std::ios_base::cur);
+            imageFile.read((char *) &byteArray[width * row * bytesPerPixel], width * bytesPerPixel);
+            size_t pos = imageFile.tellg();//////
+            imageFile.seekg(peddingPerLine, std::ios_base::cur);
         }
     }
 
@@ -164,22 +155,31 @@ public:
            return; /* write an exception class*/
         }
 
+        if ((headerInfo.signature != BMPmagic) || (DIBHeaderInfo.sizeOfHeader != Size0fDIBHeader)) {
+            return; /* write an exception class*/
+        }
 
         imageFile.write((char*) &headerInfo, sizeof(Header));
         imageFile.write((char*) &DIBHeaderInfo, sizeof(DIBHeader));
-        size_t collorPalleteSize = collorPallete.size();
+        size_t collorPalleteSize = colorPallete.size();
         if (collorPalleteSize > 0) {
-            imageFile.write((char*) &collorPallete[0], sizeof(colorTupple) * collorPalleteSize);
+            imageFile.write((char*) &colorPallete[0], sizeof(colorTupple) * collorPalleteSize);
         }
 
         size_t width = this->getWidth();
         size_t height = this->getHeight();
         size_t bytesPerPixel = this->getBytesPerPIxel();
         
+        //max size of the pedding each line is 3 bytes
         const char pedding[3] = {0, 0, 0};
+        size_t peddingPerLine = 0;
+        if (width % 4 != 0) {
+            peddingPerLine = 4 - (width % 4);
+        }
+
         for (int row = 0; row < height; ++row) {
-            imageFile.write((char*) &byteArray[row * width], width * bytesPerPixel);
-            imageFile.write(pedding, 4 - width % 4);////////////////////////////////////////////////
+            imageFile.write((char*) &byteArray[row * width * bytesPerPixel], width * bytesPerPixel);
+            imageFile.write(pedding, peddingPerLine);////////////////////////////////////////////////
         }
         
     }
@@ -191,7 +191,7 @@ public:
         return this->DIBHeaderInfo.width;
     }
     ColorPalleteType& getColorPallete() {
-        return collorPallete;
+        return colorPallete;
     }
     size_t getBytesPerPIxel() const {
         return this->DIBHeaderInfo.bitesPerPixel / 8;
@@ -199,7 +199,7 @@ public:
     IntensityType& getBitMapArray() {
         return this->byteArray;
     }
-    size_t virtual getColorPaleeteSize() const = 0;
+    size_t virtual getColorPalleteSize() const = 0;
 };
 
 class bitMap8Bits : public bitMapAbstract {
@@ -210,7 +210,7 @@ public:
     :bitMapAbstract::bitMapAbstract(header, dibHeader) {
     }
 
-    size_t virtual getColorPaleeteSize() const {
+    size_t virtual getColorPalleteSize() const {
         return ColorPalleteSize;
     }
 
@@ -218,14 +218,13 @@ public:
 
 class bitMap24Bits : public bitMapAbstract {
 private:
-    typedef pixel24Bits pixelType;
     const size_t ColorPalleteSize = 0;
 public:
     bitMap24Bits(const Header& header, const DIBHeader& dibHeader)
     :bitMapAbstract::bitMapAbstract(header, dibHeader) {
     }
 
-    size_t virtual getColorPaleeteSize() const {
+    size_t virtual getColorPalleteSize() const {
         return ColorPalleteSize;
     }
 
