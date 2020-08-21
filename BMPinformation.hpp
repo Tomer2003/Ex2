@@ -5,8 +5,9 @@
 #pragma pack(push,1)
 
 namespace reader {
-struct Header {
 
+const uint16_t BMPmagic = ((uint16_t)'B') + (((uint16_t)'M') << 8);
+struct Header {
 
     uint16_t signature;
     uint32_t sizeOfFile;
@@ -17,7 +18,23 @@ struct Header {
 
 public:
 
-    Header& setData(const std::ifstream& imageFile, Header header);
+void fromFile(std::ifstream& imageFile) {
+    
+    imageFile.read((char *) this,sizeof(Header));
+
+    if (signature != BMPmagic) {
+        return; /*exception*/
+    }
+    size_t pos = imageFile.tellg();
+    imageFile.seekg(0, std::ios::end);
+    size_t end = imageFile.tellg();
+    imageFile.seekg(pos, std::ios::beg);
+    if (sizeOfFile != end) {
+            return; /*exception*/
+    }
+    
+    
+}
        
 };
 
@@ -37,7 +54,25 @@ struct DIBHeader
     uint32_t reserved3;
 
 public: 
-    Header& setData(const std::ifstream& imageFile, DIBHeader dibHeader);
+    
+void fromFile(std::ifstream& imageFile) {
+    
+    imageFile.read((char *) this,sizeof(DIBHeader));
+    if(this->sizeOfHeader != sizeof(*this)) {
+          return; /*exception*/
+    }
+    if (this->colorsInColorPallete != 0 && this->bytesPerPixel != 8) {
+         return; /*exception*/
+    }
+    if (this->colorsInColorPallete == 8) {
+        if (this->bytesPerPixel == 0) {
+            this->colorsInColorPallete = 2 ^ this->bytesPerPixel;
+        }
+    }
+    
+}
+
+
 };
 
 struct colorTupple {
@@ -102,12 +137,11 @@ public:
         Header header;
         DIBHeader dibInfo;
         
-        
-        
-        imageFile.read((char *)&header,sizeof(header));
+        header.fromFile(imageFile);
 
-        imageFile.read((char *)&header,sizeof(header));
-
+        dibInfo.fromFile(imageFile);
+        
+       
     }
 
 };
