@@ -13,7 +13,7 @@ namespace matrix{
          * @param heightMatrix - the height of matrix
          * @param widthMatrix - the widht of matrix
          */
-        Matrix(const uint32_t heightMatrix, const uint32_t widthMatrix);
+        Matrix(const uint32_t height, const uint32_t width);
 
         /**
          * @brief Copy Constructor 
@@ -108,9 +108,9 @@ namespace matrix{
         ~Matrix();
 
     private:
-        uint32_t width;
-        uint32_t height;
-        PMatrix pMatrix;
+        uint32_t m_width;
+        uint32_t m_height;
+        PMatrix m_pMatrix;
     };
     
     /**
