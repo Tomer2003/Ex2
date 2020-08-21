@@ -289,9 +289,9 @@
 				},
 				{
 					"directoryIndex" : 0,
-					"id" : "matrix::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-matrix-Debug-8d178fafbc22d36817ae.json",
-					"name" : "matrix",
+					"id" : "tester::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tester-Debug-10d83674006613bcadb8.json",
+					"name" : "tester",
 					"projectIndex" : 0
 				}
 			]
@@ -300,8 +300,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/tomer/Advanced Programmin 1/Ex2/build",
-		"source" : "/home/tomer/Advanced Programmin 1/Ex2"
+		"build" : "/home/roy/Ex2/build",
+		"source" : "/home/roy/Ex2"
 	},
 	"version" : 
 	{

@@ -8,11 +8,18 @@ pixel tupple
 classabstract bmp24bits {
 
 info
+colorPullete;
 bitMaparray
 
 }
 
+color pallete() {
+    lehaik maarach
+    }
 
 #pragma pack(push[1])
 
 #pragma pack(pop)
+
+
+

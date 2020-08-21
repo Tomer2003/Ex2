@@ -5,9 +5,9 @@ include(CTest)
 enable_testing()
 
 
-add_executable(matrix main.cpp)
+add_executable(tester main.cpp)
 
-target_link_libraries(matrix SHARED  matrix)
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/tomer/Advanced Programmin 1/Ex2"
+CMAKE_SOURCE_DIR = /home/roy/Ex2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/tomer/Advanced Programmin 1/Ex2/build"
+CMAKE_BINARY_DIR = /home/roy/Ex2/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -81,7 +81,7 @@ test/fast: test
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	/usr/bin/cpack --config ./CPackSourceConfig.cmake /home/tomer/Advanced\ Programmin\ 1/Ex2/build/CPackSourceConfig.cmake
+	/usr/bin/cpack --config ./CPackSourceConfig.cmake /home/roy/Ex2/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -113,9 +113,9 @@ package/fast: package
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/tomer/Advanced Programmin 1/Ex2/build/CMakeFiles" "/home/tomer/Advanced Programmin 1/Ex2/build/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/Ex2/build/CMakeFiles /home/roy/Ex2/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/tomer/Advanced Programmin 1/Ex2/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/Ex2/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -181,6 +181,19 @@ ContinuousConfigure: cmake_check_build_system
 ContinuousConfigure/fast:
 	$(MAKE) -f CMakeFiles/ContinuousConfigure.dir/build.make CMakeFiles/ContinuousConfigure.dir/build
 .PHONY : ContinuousConfigure/fast
+
+#=============================================================================
+# Target rules for targets named ContinuousBuild
+
+# Build rule for target.
+ContinuousBuild: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ContinuousBuild
+.PHONY : ContinuousBuild
+
+# fast build rule for target.
+ContinuousBuild/fast:
+	$(MAKE) -f CMakeFiles/ContinuousBuild.dir/build.make CMakeFiles/ContinuousBuild.dir/build
+.PHONY : ContinuousBuild/fast
 
 #=============================================================================
 # Target rules for targets named NightlyConfigure
@@ -495,30 +508,17 @@ ContinuousSubmit/fast:
 .PHONY : ContinuousSubmit/fast
 
 #=============================================================================
-# Target rules for targets named ContinuousBuild
+# Target rules for targets named tester
 
 # Build rule for target.
-ContinuousBuild: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ContinuousBuild
-.PHONY : ContinuousBuild
+tester: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tester
+.PHONY : tester
 
 # fast build rule for target.
-ContinuousBuild/fast:
-	$(MAKE) -f CMakeFiles/ContinuousBuild.dir/build.make CMakeFiles/ContinuousBuild.dir/build
-.PHONY : ContinuousBuild/fast
-
-#=============================================================================
-# Target rules for targets named matrix
-
-# Build rule for target.
-matrix: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 matrix
-.PHONY : matrix
-
-# fast build rule for target.
-matrix/fast:
-	$(MAKE) -f CMakeFiles/matrix.dir/build.make CMakeFiles/matrix.dir/build
-.PHONY : matrix/fast
+tester/fast:
+	$(MAKE) -f CMakeFiles/tester.dir/build.make CMakeFiles/tester.dir/build
+.PHONY : tester/fast
 
 main.o: main.cpp.o
 
@@ -526,7 +526,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/matrix.dir/build.make CMakeFiles/matrix.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/tester.dir/build.make CMakeFiles/tester.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -535,7 +535,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/matrix.dir/build.make CMakeFiles/matrix.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/tester.dir/build.make CMakeFiles/tester.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -544,7 +544,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/matrix.dir/build.make CMakeFiles/matrix.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/tester.dir/build.make CMakeFiles/tester.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -560,6 +560,7 @@ help:
 	@echo "... NightlyMemCheck"
 	@echo "... NightlyTest"
 	@echo "... ContinuousConfigure"
+	@echo "... ContinuousBuild"
 	@echo "... NightlyConfigure"
 	@echo "... NightlyMemoryCheck"
 	@echo "... ExperimentalTest"
@@ -585,8 +586,7 @@ help:
 	@echo "... ContinuousMemCheck"
 	@echo "... ContinuousTest"
 	@echo "... ContinuousSubmit"
-	@echo "... ContinuousBuild"
-	@echo "... matrix"
+	@echo "... tester"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -6,3 +6,15 @@
 
 #IncludeRegexTransform: 
 
+/home/roy/Ex2/BMPinformation.hpp
+stdint.h
+-
+iostream
+-
+fstream
+-
+
+/home/roy/Ex2/main.cpp
+BMPinformation.hpp
+/home/roy/Ex2/BMPinformation.hpp
+

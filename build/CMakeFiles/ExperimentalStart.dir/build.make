@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/tomer/Advanced Programmin 1/Ex2"
+CMAKE_SOURCE_DIR = /home/roy/Ex2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/tomer/Advanced Programmin 1/Ex2/build"
+CMAKE_BINARY_DIR = /home/roy/Ex2/build
 
 # Utility rule file for ExperimentalStart.
 
@@ -71,6 +71,6 @@ CMakeFiles/ExperimentalStart.dir/clean:
 .PHONY : CMakeFiles/ExperimentalStart.dir/clean
 
 CMakeFiles/ExperimentalStart.dir/depend:
-	cd "/home/tomer/Advanced Programmin 1/Ex2/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/tomer/Advanced Programmin 1/Ex2" "/home/tomer/Advanced Programmin 1/Ex2" "/home/tomer/Advanced Programmin 1/Ex2/build" "/home/tomer/Advanced Programmin 1/Ex2/build" "/home/tomer/Advanced Programmin 1/Ex2/build/CMakeFiles/ExperimentalStart.dir/DependInfo.cmake" --color=$(COLOR)
+	cd /home/roy/Ex2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/roy/Ex2 /home/roy/Ex2 /home/roy/Ex2/build /home/roy/Ex2/build /home/roy/Ex2/build/CMakeFiles/ExperimentalStart.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ExperimentalStart.dir/depend
 

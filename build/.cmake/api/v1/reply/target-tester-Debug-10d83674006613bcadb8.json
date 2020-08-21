@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "matrix"
+			"path" : "tester"
 		}
 	],
 	"backtrace" : 1,
@@ -45,7 +45,7 @@
 			]
 		}
 	],
-	"id" : "matrix::@6890427a1f51a3e7e1df",
+	"id" : "tester::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -57,24 +57,12 @@
 			{
 				"fragment" : "-rdynamic",
 				"role" : "flags"
-			},
-			{
-				"fragment" : "-lSHARED",
-				"role" : "libraries"
-			},
-			{
-				"fragment" : "-lmatrix",
-				"role" : "libraries"
-			},
-			{
-				"fragment" : "\"/home/tomer/Advanced Programmin 1/Ex2ClassMatrix.cpp\"",
-				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
 	},
-	"name" : "matrix",
-	"nameOnDisk" : "matrix",
+	"name" : "tester",
+	"nameOnDisk" : "tester",
 	"paths" : 
 	{
 		"build" : ".",

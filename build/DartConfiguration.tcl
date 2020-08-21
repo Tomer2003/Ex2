@@ -4,14 +4,14 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/tomer/Advanced Programmin 1/Ex2
-BuildDirectory: /home/tomer/Advanced Programmin 1/Ex2/build
+SourceDirectory: /home/roy/Ex2
+BuildDirectory: /home/roy/Ex2/build
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: DESKTOP-PC0NUPF
+Site: royubuntuvm
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Linux-c++
@@ -26,7 +26,7 @@ SubmitURL: http://
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/tomer/Advanced Programmin 1/Ex2"
+ConfigureCommand: "/usr/bin/cmake" "/home/roy/Ex2"
 MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
 DefaultCTestConfigurationType: Release
 

@@ -99,7 +99,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/tomer/Advanced Programmin 1/Ex2/build"
+			"value" : "/home/roy/Ex2/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -643,7 +643,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/tomer/Advanced Programmin 1/Ex2"
+			"value" : "/home/roy/Ex2"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1931,7 +1931,7 @@
 				}
 			],
 			"type" : "STRING",
-			"value" : "DESKTOP-PC0NUPF"
+			"value" : "royubuntuvm"
 		},
 		{
 			"name" : "SLURM_SBATCH_COMMAND",
@@ -2007,7 +2007,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/tomer/Advanced Programmin 1/Ex2/build"
+			"value" : "/home/roy/Ex2/build"
 		},
 		{
 			"name" : "matrix2_SOURCE_DIR",
@@ -2019,31 +2019,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/tomer/Advanced Programmin 1/Ex2"
-		},
-		{
-			"name" : "matrix_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/tomer/Advanced Programmin 1/Ex2/build"
-		},
-		{
-			"name" : "matrix_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/tomer/Advanced Programmin 1/Ex2"
+			"value" : "/home/roy/Ex2"
 		}
 	],
 	"kind" : "cache",
