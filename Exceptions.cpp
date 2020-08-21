@@ -27,7 +27,7 @@ void ErrorCantAllocateMatrix::printException(){
 }
 
 void ErrorMatrixSizeNotAppopriate::printException(){
-    std::cout << "The height or width given in create matrix function to the matrix is 0!" << std::endl;
+    std::cout << "Error: The height or width given in create matrix function to the matrix is 0!" << std::endl;
 }
 
 /**
