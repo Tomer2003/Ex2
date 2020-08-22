@@ -17,4 +17,8 @@ namespace FileExceptions{
     void WriteFileException::printException(){
         std::cout << "Error: Error occurred while writing to file!" << std::endl;
     }
+
+    void FileNotBmpException::printException(){
+        std::cout << "Error: The file is not a bmp file!" << std::endl;
+    }
 }

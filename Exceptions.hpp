@@ -40,11 +40,14 @@ public:
      */
     void printException();
 };
+
+class FileNotBmpException{
+public:
+    /**
+     * @brief The function prints appopriate error message 
+     * if error occurred while writing to file.
+     * 
+     */
+    void printException();
+};
 }
-
-
-
-
-
-
-
