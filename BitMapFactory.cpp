@@ -1,5 +1,4 @@
 
-#include <memory>
 #include "BitMapFactory.hpp"
 
 namespace BitMapManipulator {

@@ -2,7 +2,6 @@
 #include <memory>
 #include <iostream>
 #include "BMPinformation.hpp"
-#include "headers.hpp"
 
 
 

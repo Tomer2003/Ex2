@@ -1,16 +1,13 @@
-#include <stdint.h>
-#include <iostream>
-#include <fstream>
 #include "headers.hpp"
 
 namespace BitMapManipulator{
 
 void Header::fromfStream(std::ifstream& imageFile) {
-    
-    imageFile.read((char *) this,sizeof(Header));
     if (!imageFile) {
         return; /*exception*/
     }
+    imageFile.read((char *) this,sizeof(Header));
+   
     if (signature != BMPmagic) {
         return; /*exception*/
     }
@@ -26,11 +23,11 @@ void Header::fromfStream(std::ifstream& imageFile) {
 }
 
 void DIBHeader::fromfStream(std::ifstream& imageFile) {
-    
-    imageFile.read((char *) this, sizeof(DIBHeader));
     if (!imageFile) {
         return; /*exception*/
     }
+    imageFile.read((char *) this, sizeof(DIBHeader));
+
     if(this->sizeOfHeader != sizeof(*this)) {
         return; /*exception*/
     }
