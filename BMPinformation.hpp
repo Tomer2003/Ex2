@@ -1,14 +1,16 @@
+#pragma once
 #include <stdint.h>
-#include <iostream>
 #include <fstream>
-#include <memory>
 #include <vector>
+#include "headers.hpp"
+#include "colorTupple.hpp"
+#include "BitMapFactory.hpp"
 
 
-#pragma pack(push,1)
+/*#pragma pack(push,1)*/
 
 namespace BitMapManipulator {
-
+/*
 const uint16_t BMPmagic = ((uint16_t)'B') + (((uint16_t)'M') << 8); //BM
 const uint16_t Size0fDIBHeader = 40;
 struct Header {
@@ -26,17 +28,17 @@ void fromfStream(std::ifstream& imageFile) {
     
     imageFile.read((char *) this,sizeof(Header));
     if (!imageFile) {
-        return; /*exception*/
+        return; //exception
     }
     if (signature != BMPmagic) {
-        return; /*exception*/
+        return; //exception
     }
     size_t pos = imageFile.tellg();
     imageFile.seekg(0, std::ios::end);
     size_t end = imageFile.tellg();
     imageFile.seekg(pos, std::ios::beg);
     if (sizeOfFile != end) {
-            return; /*exception*/
+            return; //exception
     }
     
     
@@ -65,13 +67,19 @@ void fromfStream(std::ifstream& imageFile) {
     
     imageFile.read((char *) this, sizeof(DIBHeader));
     if (!imageFile) {
-        return; /*exception*/
+        return; //exception
     }
     if(this->sizeOfHeader != sizeof(*this)) {
-          return; /*exception*/
+        return; //exception
+    }
+    if (this->bitesPerPixel != 8 && this->bitesPerPixel != 24) {
+        return; //exception
+    }
+    if (compressionIndex1 != 0 || compressionIndex2 != 0 || constant != 1) {
+        return; //exception
     }
     if (this->colorsInColorPallete != 0 && this->bitesPerPixel != 8) {
-         return; /*exception*/
+        return; //exception
     }
 
 }
@@ -89,6 +97,7 @@ struct colorTupple {
 
 
 #pragma pack(pop)
+*/
 
 class bitMap8Bits;
 class bitMap24Bits;
@@ -124,12 +133,11 @@ public:
         colorPallete.resize(colorPalleteSize);*/
         colorPallete.resize(colorPalleteSize);
 
-        int i = imageFile.tellg();//////
         imageFile.read((char *) &colorPallete[0], colorPalleteSize * sizeof(colorTupple));
         if (!imageFile) {
             return; /*exception*/
         }
-        i = imageFile.tellg();///////
+
         size_t width = this->getWidth();
         size_t height = this->getHeight();
         size_t bytesPerPixel = this->getBytesPerPIxel();
@@ -141,6 +149,10 @@ public:
             peddingPerLine = 4 - (width % 4);
         }
 
+        int positionInFile = imageFile.tellg();
+        if (this->headerInfo.offsetPixelArray != positionInFile) {
+            return; /*exception*/
+        }
         for(size_t row = 0; row < height; ++row) {
             imageFile.read((char *) &byteArray[width * row * bytesPerPixel], width * bytesPerPixel);
             size_t pos = imageFile.tellg();//////
@@ -231,14 +243,14 @@ public:
 
 };
 
-class BitMapFactory {
+/*class BitMapFactory {
 public:
     static std::unique_ptr<bitMapAbstract> fromFile(const std::string& imagePath) {
 
         std::ifstream imageFile;
         imageFile.open(imagePath, std::ios::binary);
         if (!imageFile.is_open()) {
-           return nullptr; /* write an exception class*/
+           return nullptr; // write an exception class
         }
 
         Header header;
@@ -257,7 +269,7 @@ public:
             bitMap = std::unique_ptr<bitMap24Bits>{new bitMap24Bits(header, dibInfo)};
             //bitMap = std::make_unique<bitMap24Bits>(header, dibInfo, imageFile);
         } else {
-            return nullptr; /* write an exception class*/
+            return nullptr; // write an exception class
         }
         bitMap->fromFile(imageFile);
         return bitMap;
@@ -265,6 +277,7 @@ public:
 
 
 };
+*/
 
 
 
