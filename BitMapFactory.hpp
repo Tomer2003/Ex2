@@ -7,6 +7,7 @@
 
 namespace BitMapManipulator {
 
+class bitMapAbstract;
 class BitMapFactory {
 
 public:

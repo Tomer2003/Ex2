@@ -123,6 +123,8 @@ public:
     void fromFile(std::ifstream& imageFile);
 
     void toFile(const std::string imagePath);
+
+    void rotate90Degrees ();
     
 
     size_t getHeight() const;
@@ -131,11 +133,15 @@ public:
 
     ColorPalleteType& getColorPallete();
 
-    size_t getBytesPerPIxel();
+    size_t getBytesPerPIxel() const;
 
     IntensityType& getBitMapArray();
 
     size_t virtual getColorPalleteSize() const = 0;
+
+    void setHeight(size_t height);
+    
+    void setWidth(size_t width);
 };
 
 class bitMap8Bits : public bitMapAbstract {

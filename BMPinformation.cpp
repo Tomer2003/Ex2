@@ -1,9 +1,16 @@
+#include <memory>
+#include <cstring>
 #include "BMPinformation.hpp"
 
 
-namespace BitMapManipulation {
 
-void fromFile(std::ifstream& imageFile) {
+namespace BitMapManipulator {
+    
+typedef std::vector<colorTupple> ColorPalleteType;
+typedef std::vector<uint8_t> IntensityType;
+
+
+void bitMapAbstract::fromFile(std::ifstream& imageFile) {
         
         size_t colorPalleteSize = 0;
         if (DIBHeaderInfo.colorsInColorPallete == 0) {
@@ -12,8 +19,6 @@ void fromFile(std::ifstream& imageFile) {
         colorPalleteSize = DIBHeaderInfo.colorsInColorPallete;
         }
 
-        /*ColorPalleteType& colorPallete = getColorPallete();
-        colorPallete.resize(colorPalleteSize);*/
         colorPallete.resize(colorPalleteSize);
 
         if (!imageFile) {
@@ -24,7 +29,7 @@ void fromFile(std::ifstream& imageFile) {
         size_t width = this->getWidth();
         size_t height = this->getHeight();
         size_t bytesPerPixel = this->getBytesPerPIxel();
-        /*IntensityType& bitMapArray = getBitMapArray();*/
+        
 
         byteArray.resize(height * width * bytesPerPixel);
         size_t peddingPerLine = 0;
@@ -43,7 +48,7 @@ void fromFile(std::ifstream& imageFile) {
         }
     }
 
-    void toFile(const std::string imagePath) {
+    void bitMapAbstract::toFile(const std::string imagePath) {
         std::ofstream imageFile;
         imageFile.open(imagePath, std::ios::binary | std::ios::trunc);
         if (!imageFile.is_open()) {
@@ -72,41 +77,61 @@ void fromFile(std::ifstream& imageFile) {
             peddingPerLine = 4 - (width % 4);
         }
 
+        if (imageFile.tellp() != headerInfo.offsetPixelArray) {
+             return; /* write an exception class*/
+        }
         for (int row = 0; row < height; ++row) {
             imageFile.write((char*) &byteArray[row * width * bytesPerPixel], width * bytesPerPixel);
-            imageFile.write(pedding, peddingPerLine);////////////////////////////////////////////////
+            imageFile.write(pedding, peddingPerLine);
         }
         
     }
 
-    size_t getHeight() {
+    size_t bitMapAbstract::getHeight() const{
         return this->DIBHeaderInfo.height;
     }
-    size_t getWidth() {
+    size_t bitMapAbstract::getWidth() const{
         return this->DIBHeaderInfo.width;
     }
-    ColorPalleteType& getColorPallete() {
+    ColorPalleteType& bitMapAbstract::getColorPallete() {
         return colorPallete;
     }
-    size_t getBytesPerPIxel()  {
+    size_t bitMapAbstract::getBytesPerPIxel() const{
         return this->DIBHeaderInfo.bitesPerPixel / 8;
     }
-    IntensityType& getBitMapArray() {
+    IntensityType& bitMapAbstract::getBitMapArray() {
         return this->byteArray;
     }
-};
+
+    void bitMapAbstract::setHeight(size_t height) {
+        DIBHeaderInfo.height = height;
+    }
+    void bitMapAbstract::setWidth(size_t width) {
+        DIBHeaderInfo.width = width;
+    }
+
+    void bitMapAbstract::rotate90Degrees() {
+        IntensityType tempByteArray;
+        tempByteArray.resize(byteArray.size());
+        size_t height = DIBHeaderInfo.height;
+        size_t width = DIBHeaderInfo.width;
+        size_t bytesPerPixel = DIBHeaderInfo.bitesPerPixel / 8;
+        setHeight(width);
+        setWidth(height);
+
+        //rotating the matix of the pixels by 90 degrees
+        //the calculations inside the for switch the locations of the pixels inside the matrix
+        for (int row = 0; row < width; ++row) {
+            for (int col = 0; col < height; ++col) {
+                uint8_t* src = &byteArray[(col * width + width - row) * bytesPerPixel];
+                uint8_t* des = &tempByteArray[(row * height + col) * bytesPerPixel];
+                memcpy(des, src, bytesPerPixel);
+            }
+        }
 
 
 
-
-
-
-
-
-
-
-
-
+    }
 
 
 

@@ -1,7 +1,10 @@
+
 #include <memory>
 #include <iostream>
-#include "BMPinformation.hpp"
 #include "BitMapFactory.hpp"
+#include "BMPinformation.hpp"
+
+
 
 int main() {
 
@@ -11,3 +14,4 @@ BitMap->toFile("capara.bmp");
 
 return 0;
 }
+
