@@ -28,4 +28,6 @@ target_link_libraries(test1 BitMapFactory BitMap Headers)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+
 include(CPack)
+

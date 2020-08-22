@@ -30,6 +30,7 @@ void DIBHeader::fromfStream(std::ifstream& imageFile){
     if (this->colorsInColorPallete != 0 && this->bitesPerPixel != 8) {
          return; /*exception*/
     }
+    //#pragma pack(pop)
 }
 
 

@@ -2,7 +2,7 @@
 #include <cstring>
 namespace BitMap{
     bitMapAbstract::bitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo)
-    : headerInfo(this->headerInfo), DIBHeaderInfo(this->DIBHeaderInfo){ }
+    : headerInfo(headerInfo), DIBHeaderInfo(DIBHeaderInfo){ }
 
 
     void bitMapAbstract::fromFile(std::ifstream& imageFile) {
@@ -130,6 +130,10 @@ namespace BitMap{
     bitMap8Bits::bitMap8Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader)
     :bitMapAbstract::bitMapAbstract(header, dibHeader){}
 
+    size_t bitMap8Bits::getColorPalleteSize() const {
+        return ColorPalleteSize;
+    }
+
     void bitMap8Bits::convertToGray(){
         ColorPalleteType& theColorPallete = getColorPallete();
         for (Headers::colorTupple& colorPallete : theColorPallete) {
@@ -142,6 +146,10 @@ namespace BitMap{
 
     bitMap24Bits::bitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader)
     :bitMapAbstract::bitMapAbstract(header, dibHeader) {}
+
+    size_t bitMap24Bits::getColorPalleteSize() const {
+        return ColorPalleteSize;
+    }
 
     void bitMap24Bits::convertToGray() {
         size_t height = getHeight();

@@ -1,5 +1,4 @@
 #pragma once
-#pragma pack(pop)
 #include "Headers.hpp"
 #include <vector>
 namespace BitMap{
@@ -42,7 +41,7 @@ public:
 
     size_t virtual getColorPalleteSize() const = 0;
 
-    virtual void convertToGray() = 0;
+    void virtual convertToGray() = 0;
 };
 
 

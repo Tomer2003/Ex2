@@ -1,8 +1,7 @@
 #pragma once
-#pragma pack(push, 1)
 #include <fstream>
 #include <stdint.h>
-
+#pragma pack(push, 1)
 
 
 namespace Headers{
@@ -41,7 +40,7 @@ struct DIBHeader
     uint32_t reserved3;
 
 public: 
-       
+
 void fromfStream(std::ifstream& imageFile);
 };
 
@@ -67,3 +66,4 @@ struct colorTupple {
 
 
 }
+#pragma pack(pop)
