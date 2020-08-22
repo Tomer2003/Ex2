@@ -32,7 +32,17 @@ public:
 
     IntensityType& getBitMapArray();
 
+    void rotate90Degrees();
+
+    void setBitMapHeight(const uint32_t height);
+
+    void setBitMapWidth(const uint32_t width);
+
+    uint8_t getRGBToGray(const uint8_t blue, const uint8_t green, const uint8_t red) const;
+
     size_t virtual getColorPalleteSize() const = 0;
+
+    virtual void convertToGray() = 0;
 };
 
 
@@ -42,6 +52,8 @@ private:
     const size_t ColorPalleteSize = 256;
 public:
     bitMap8Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
+
+    virtual void convertToGray(); 
 
     size_t virtual getColorPalleteSize() const;
 };
@@ -53,6 +65,8 @@ private:
     const size_t ColorPalleteSize = 0;
 public:
     bitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
+
+    virtual void convertToGray();
 
     size_t virtual getColorPalleteSize() const;
 };

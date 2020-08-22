@@ -41,7 +41,7 @@ struct DIBHeader
     uint32_t reserved3;
 
 public: 
-    
+       
 void fromfStream(std::ifstream& imageFile);
 };
 
