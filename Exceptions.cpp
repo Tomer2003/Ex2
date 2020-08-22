@@ -1,7 +1,9 @@
 
 #include <iostream>
 #include "Exceptions.hpp"
-#include "ErrorCode.h"
+extern "C" {
+#include "matrix/ErrorCode.h"
+}
 
 namespace Exceptions {
 
@@ -36,7 +38,9 @@ void ErrorMatrixSizeNotAppopriate::printException(){
  * @param code - code to ErrorCode
  */
 void throwAppopriateErrorIfHas(ErrorCode code){
-	switch (code) {
+	int a = code;
+	printf("%d", a);
+	/*switch (code) {
 		case EXCEED_MATRIX_SIZE_ERROR:
 			throw ErrorExceedMatrix();
 		case MATRIX_ADD_ERROR:
@@ -49,6 +53,6 @@ void throwAppopriateErrorIfHas(ErrorCode code){
 			throw ErrorCantAllocateMatrix();
 		case MATRIX_SIZE_NOT_APPOPRIATE:
 			throw ErrorMatrixSizeNotAppopriate();
-		}
+		}*/
 	}
 }

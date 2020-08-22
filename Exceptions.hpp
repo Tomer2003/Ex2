@@ -1,5 +1,7 @@
 #pragma once
-#include "ErrorCode.h"
+extern "C" {
+#include "matrix/ErrorCode.h"
+}
 namespace Exceptions {
 
 class ErrorExceedMatrix {

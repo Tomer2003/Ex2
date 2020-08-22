@@ -1,7 +1,9 @@
 #include <iostream>
 #include "ClassMatrix.hpp"
 #include "Exceptions.hpp"
-#include "Matrix.h"
+extern "C" {
+#include "matrix/Matrix.h"
+}
 
 namespace matrix{
     Matrix::Matrix(const uint32_t height, const uint32_t width) :m_width(width), m_height(height){
