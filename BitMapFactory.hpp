@@ -5,7 +5,8 @@
 namespace Factory{
 class BitMapFactory {
 public:
-    static std::unique_ptr<BitMap::bitMapAbstract> fromFile(const std::string& imagePath);
+    //static std::unique_ptr<BitMap::bitMapAbstract> fromFile(const std::string& imagePath);
+    static BitMap::bitMapAbstract* fromFile(const std::string& imagePath);
 };
 
 

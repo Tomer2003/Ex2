@@ -42,7 +42,7 @@ public:
 
     size_t virtual getColorPalleteSize() const = 0;
 
-    virtual void convertToGray() = 0;
+    void virtual convertToGray() = 0;
 };
 
 

@@ -2,7 +2,7 @@
 #include <cstring>
 namespace BitMap{
     bitMapAbstract::bitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo)
-    : headerInfo(this->headerInfo), DIBHeaderInfo(this->DIBHeaderInfo){ }
+    : headerInfo(headerInfo), DIBHeaderInfo(DIBHeaderInfo){ }
 
 
     void bitMapAbstract::fromFile(std::ifstream& imageFile) {
