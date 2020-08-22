@@ -1,8 +1,8 @@
 #include "BitMapFactory.hpp"
-
+#include <iostream>
 namespace Factory{
 std::unique_ptr<BitMap::bitMapAbstract> BitMapFactory::fromFile(const std::string& imagePath){
-      std::ifstream imageFile;
+        std::ifstream imageFile;
         imageFile.open(imagePath, std::ios::binary);
         if (!imageFile.is_open()) {
            return nullptr; /* write an exception class*/
@@ -26,6 +26,7 @@ std::unique_ptr<BitMap::bitMapAbstract> BitMapFactory::fromFile(const std::strin
         } else {
             return nullptr; /* write an exception class*/
         }
+        
         bitMap->fromFile(imageFile);
         return bitMap;
 };
