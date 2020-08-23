@@ -1,5 +1,6 @@
 #include "BitMapFactory.hpp"
 #include "Headers.hpp"
+#include "Exceptions.hpp"
 #include <iostream>
 #include <fstream>
 namespace Factory{
@@ -7,8 +8,7 @@ BitMap::BitMapAbstract* BitMapFactory::fromFile(const std::string& imagePath){
        std::ifstream imageFile;
         imageFile.open(imagePath, std::ios::in);
         if (imageFile.fail()) {
-           std::cout << "error!" << std::endl;
-           return nullptr; //////return exception!!!!!!!!!!!!!!!!!!!!!
+           throw FileExceptions::OpenFileExceptionForReading();
         }
 
         Headers::Header header;
@@ -25,7 +25,7 @@ BitMap::BitMapAbstract* BitMapFactory::fromFile(const std::string& imagePath){
         } else if (bitsPerPixel == 24) {
             bitMap = new BitMap::BitMap24Bits(header, dibInfo);
         } else {
-            //return nullptr;  write an exception class!!!!!!!!!!!!!!!!!!!!!!
+            throw FileExceptions::WrongBMPFileException();
         }
         
         bitMap->fromFile(imageFile);

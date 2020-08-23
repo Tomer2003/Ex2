@@ -28,9 +28,15 @@ add_library(
     bmp_tester.hpp
 )
 
+add_library(
+    Exceptions
+    Exceptions.cpp
+    Exceptions.hpp
+)
+
 add_executable(test1 main.cpp)
 
-target_link_libraries(test1 bmp_tester BitMapFactory BitMap Headers)
+target_link_libraries(test1 bmp_tester BitMapFactory BitMap Headers Exceptions)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

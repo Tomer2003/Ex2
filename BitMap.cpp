@@ -1,4 +1,5 @@
 #include "BitMap.hpp"
+#include "Exceptions.hpp"
 #include <cstring>
 namespace BitMap{
     BitMapAbstract::BitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo)
@@ -12,16 +13,16 @@ namespace BitMap{
     void BitMapAbstract::fromFile(std::ifstream& imageFile) {
         size_t colorPalleteSize = 0;
         if (m_DIBHeaderInfo.colorsInColorPallete == 0) {
-        colorPalleteSize = this->getColorPalleteSize();
+            colorPalleteSize = this->getColorPalleteSize();
         } else {
-        colorPalleteSize = m_DIBHeaderInfo.colorsInColorPallete;
+            colorPalleteSize = m_DIBHeaderInfo.colorsInColorPallete;
         }
 
         m_colorPallete.resize(colorPalleteSize);
 
         imageFile.read((char *) &m_colorPallete[0], colorPalleteSize * sizeof(Headers::colorTupple));
         if (!imageFile) {
-            return; /*exception*/
+            throw FileExceptions::ReadFileException();
         }
 
         auto width = this->getWidth();
@@ -43,16 +44,16 @@ namespace BitMap{
     
     void BitMapAbstract::toFile(const std::string imagePath) {
         if (this == nullptr) {
-            return;//exception!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            throw FileExceptions::NULLPointerException();
         }
         std::ofstream imageFile;
         imageFile.open(imagePath, std::ios::binary | std::ios::trunc);
         if (!imageFile.is_open()) {
-           return; /* write an exception class*/
+           throw FileExceptions::ReadFileException();
         }
 
         if ((m_headerInfo.signature != Headers::BMPmagic) || (m_DIBHeaderInfo.sizeOfHeader != Headers::Size0fDIBHeader)) {
-            return; /* write an exception class*/
+            throw FileExceptions::WrongBMPFileException();
         }
 
         imageFile.write((char*) &m_headerInfo, sizeof(Headers::Header));
@@ -89,7 +90,7 @@ namespace BitMap{
 
     void BitMapAbstract::rotate90Degrees() {
         if (this == nullptr) {
-            return;//exception!!!!!!!!!!!!!!!!!!!!!!!!
+            throw FileExceptions::NULLPointerException();
         }
         IntensityType tempByteArray;
         tempByteArray.resize(m_byteArray.size());
@@ -161,13 +162,13 @@ namespace BitMap{
     void BitMapAbstract::convertToGray(BitMap::BitMapAbstract* bitMap) {
 
         if (bitMap == nullptr) {
-            return;//return exception!!!!!!!!!!!!!!!!!!!!!!!!
+            throw FileExceptions::NULLPointerException();
         }
 
         if (bitMap->m_DIBHeaderInfo.bitesPerPixel == 8) {
             ColorPalleteType& theNewColorPallete = bitMap->getColorPallete();
             if (theNewColorPallete.size() == 0) {
-              //return; exception
+              throw FileExceptions::WrongBMPFileException();
             }
 
             for (Headers::colorTupple& c : theNewColorPallete) {

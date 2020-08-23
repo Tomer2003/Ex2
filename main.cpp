@@ -8,7 +8,7 @@
 
 int main() {
 
-testing::bmp::convert_to_grayscale("tsaban.bmp", "d.bmp");
+testing::bmp::rotate_image("tsaba.bmp", "d.bmp");
 
 return 0;
 }
