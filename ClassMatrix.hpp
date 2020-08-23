@@ -1,7 +1,9 @@
 
 #pragma once
 #include <stdint.h>
-#include "Matrix.h"
+extern "C" {
+#include "matrix/Matrix.h"
+}
 
 namespace matrix{
 

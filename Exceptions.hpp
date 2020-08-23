@@ -63,5 +63,5 @@ public:
  * 
  * @param code - code to ErrorCode
  */
-void throwAppopriateError(ErrorCode code);
+void throwAppopriateErrorIfHas(ErrorCode code);
 }
