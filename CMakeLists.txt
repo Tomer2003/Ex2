@@ -22,9 +22,15 @@ add_library(
     Headers.hpp
 )
 
+add_library(
+    bmp_tester
+    bmp_tester.cpp
+    bmp_tester.hpp
+)
+
 add_executable(test1 main.cpp)
 
-target_link_libraries(test1 BitMapFactory BitMap Headers)
+target_link_libraries(test1 bmp_tester BitMapFactory BitMap Headers)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -2,22 +2,25 @@
 #include "BitMapFactory.hpp"
 #include "BitMap.hpp"
 
+namespace testing {
+
+namespace bmp{
+
 void rotate_image(const std::string& imagePath, const std::string& outputPath) {
 
-BitMap::bitMapAbstract* bitMap = Factory::BitMapFactory::fromFile("lena-color.bmp");
+BitMap::BitMapAbstract* bitMap = Factory::BitMapFactory::fromFile(imagePath);
 bitMap->rotate90Degrees();
 bitMap->toFile(outputPath);
-
 
 }
 void convert_to_grayscale(const std::string& imagePath, const std::string& outputPath) {
 
-BitMap::bitMapAbstract* bitMap = Factory::BitMapFactory::fromFile("lena-color.bmp");
-BitMap::bitMapAbstract::convertToGray(bitMap);
+BitMap::BitMapAbstract* bitMap = Factory::BitMapFactory::fromFile(imagePath);
+BitMap::BitMapAbstract::convertToGray(bitMap);
 bitMap->toFile(outputPath);
-
 
 }
 
-
+}
+}
 

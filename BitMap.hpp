@@ -2,24 +2,24 @@
 #include "Headers.hpp"
 #include <vector>
 namespace BitMap{
-class bitMap8Bits;
-class bitMap24Bits;
+class BitMap8Bits;
+class BitMap24Bits;
 
-class bitMapAbstract{
+class BitMapAbstract{
 protected:
     typedef std::vector<Headers::colorTupple> ColorPalleteType;
     typedef std::vector<uint8_t> IntensityType;
 
 private:
-    Headers::Header headerInfo;
-    Headers::DIBHeader DIBHeaderInfo;
-    ColorPalleteType colorPallete;
-    IntensityType byteArray;
+    Headers::Header m_headerInfo;
+    Headers::DIBHeader m_DIBHeaderInfo;
+    ColorPalleteType m_colorPallete;
+    IntensityType m_byteArray;
 
 public:
-    bitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo);
+    BitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo);
 
-    bitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo, ColorPalleteType& colorPallete, IntensityType& bitMapArray);
+    BitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo, ColorPalleteType& colorPallete, IntensityType& bitMapArray);
 
     void fromFile(std::ifstream& imageFile);
 
@@ -49,36 +49,30 @@ public:
 
     size_t virtual getColorPalleteSize() const = 0;
 
-    //void virtual convertToGray() = 0;
-
-    static void convertToGray(BitMap::bitMapAbstract* bitMap);
+    static void convertToGray(BitMap::BitMapAbstract* bitMap);
 
 };
 
 
 
-class bitMap8Bits : public bitMapAbstract {
+class BitMap8Bits : public BitMapAbstract {
 private:
-    const size_t ColorPalleteSize = 256;
+    const size_t m_ColorPalleteSize = 256;
 public:
-    bitMap8Bits(Headers::Header& theNewHeader, Headers::DIBHeader& theNewDIBHeader, ColorPalleteType& theNewPallete, IntensityType& theNewBitMapArray);
+    BitMap8Bits(Headers::Header& theNewHeader, Headers::DIBHeader& theNewDIBHeader, ColorPalleteType& theNewPallete, IntensityType& theNewBitMapArray);
 
-    bitMap8Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
-
-    //virtual void convertToGray(); 
+    BitMap8Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
 
     size_t virtual getColorPalleteSize() const;
 };
 
 
 
-class bitMap24Bits : public bitMapAbstract {
+class BitMap24Bits : public BitMapAbstract {
 private:
-    const size_t ColorPalleteSize = 0;
+    const size_t m_ColorPalleteSize = 0;
 public:
-    bitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
-
-    //virtual convertToGray(BitMap::bitMap8Bits& bitMap);
+    BitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
 
     size_t virtual getColorPalleteSize() const;
 };
