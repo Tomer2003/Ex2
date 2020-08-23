@@ -81,10 +81,7 @@ namespace matrix{
 
     Matrix Matrix::operator*(const double scalar) const{
         std::cout << "scalar!" << std::endl;
-        Matrix result(this->m_height, this->m_width);
-        if(this->m_height == 0 || this->m_width == 0){
-            throw Exceptions::ErrorMatrixSizeNotAppopriate();
-        }
+        Matrix result(*this);
         Exceptions::throwAppopriateErrorIfHas(matrix_multiplyWithScalar(result.m_pMatrix, scalar));
         return result;
     }

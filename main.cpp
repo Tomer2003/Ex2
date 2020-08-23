@@ -2,7 +2,7 @@
 #include <iostream>
 
 void printMatrix(const matrix::Matrix& matrix){
-    for(int i = matrix.matrixGetHeight() - 1; i >= 0; --i){
+    for(uint32_t i = 0; i < matrix.matrixGetHeight(); ++i){
         for(uint32_t j = 0; j < matrix.matrixGetWidth(); ++j){
             std::cout << matrix(i, j) << " ";
         }
@@ -26,8 +26,7 @@ int main(){
     printMatrix(A);
     printMatrix(B);
     //printMatrix(A + B);
-    //printMatrix(A * B);
-    printMatrix(A * 3);
+    printMatrix(A * B);
     
 
 
