@@ -1,7 +1,7 @@
 #pragma once
-#pragma pack(push, 1)
 #include <fstream>
 #include <stdint.h>
+#pragma pack(push, 1)
 
 
 
@@ -67,3 +67,4 @@ struct colorTupple {
 
 
 }
+#pragma pack(pop)

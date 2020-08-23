@@ -1,14 +1,17 @@
-/*#include <memory>
+#include <memory>
 #include <iostream>
 #include "BitMap.hpp"
-#include "BitMapFactory.hpp"*/
+#include "BitMapFactory.hpp"
 #include <fstream>
 #include <iostream>
 
 int main() {
-    std::fstream in;
+    //std::fstream in;
 //std::cout << "hhh" << std::endl;
-//BitMap::bitMapAbstract* bitMap = Factory::BitMapFactory::fromFile("tsaban.bmp");
+BitMap::bitMapAbstract* bitMap = Factory::BitMapFactory::fromFile("tsaban.bmp");
+bitMap->rotate90Degrees();
+bitMap->convertToGray();
+bitMap->toFile("capara.bmp");
 //std::unique_ptr<BitMap::bitMapAbstract> BitMap = std::make_unique<BitMap::bitMapAbstract>(Factory::BitMapFactory::fromFile("tsaban.bmp"));    
 /*if(typeid(*bitMap) == typeid(BitMap::bitMap8Bits)){
     std::cout << "aaa";

@@ -1,6 +1,5 @@
 #pragma once
 #include "Headers.hpp"
-//#pragma pack(pop)
 #include <vector>
 namespace BitMap{
 
