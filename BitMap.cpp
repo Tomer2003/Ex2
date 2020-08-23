@@ -4,6 +4,8 @@ namespace BitMap{
     bitMapAbstract::bitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo)
     : headerInfo(headerInfo), DIBHeaderInfo(DIBHeaderInfo){ }
 
+    bitMapAbstract::bitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo, ColorPalleteType& colorPallete,
+     IntensityType& bitMapArray) : headerInfo(headerInfo), DIBHeaderInfo(DIBHeaderInfo), colorPallete(colorPallete), byteArray(bitMapArray){};
 
     void bitMapAbstract::fromFile(std::ifstream& imageFile) {
           size_t colorPalleteSize = 0;
@@ -106,20 +108,28 @@ namespace BitMap{
         memcpy(&byteArray[0], &tempByteArray[0], byteArray.size());
     }
 
+    const Headers::Header& bitMapAbstract::getHeader() const{
+        return headerInfo;
+    }
+
+    const Headers::DIBHeader& bitMapAbstract::getDIBHeader() const{
+        return DIBHeaderInfo;
+    }
+
     size_t bitMapAbstract::getHeight() const{
-        return this->DIBHeaderInfo.height;
+        return DIBHeaderInfo.height;
     }
     size_t bitMapAbstract::getWidth() const{
-        return this->DIBHeaderInfo.width;
+        return DIBHeaderInfo.width;
     }
     bitMapAbstract::ColorPalleteType& bitMapAbstract::getColorPallete() {
-        return this->colorPallete;
+        return colorPallete;
     }
     size_t bitMapAbstract::getBytesPerPIxel() const {
-        return this->DIBHeaderInfo.bitesPerPixel / 8;
+        return DIBHeaderInfo.bitesPerPixel / 8;
     }
     bitMapAbstract::IntensityType& bitMapAbstract::getBitMapArray() {
-        return this->byteArray;
+        return byteArray;
     }
 
     uint8_t bitMapAbstract::getRGBToGray(const uint8_t blue, const uint8_t green, const uint8_t red) const {
@@ -134,7 +144,10 @@ namespace BitMap{
         return ColorPalleteSize;
     }
 
-    void bitMap8Bits::convertToGray(){
+    bitMap8Bits::bitMap8Bits(Headers::Header& theNewHeader, Headers::DIBHeader& theNewDIBHeader, ColorPalleteType& theNewPallete,
+    IntensityType& theNewBitMapArray) : bitMapAbstract(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray){};
+
+  /*  void bitMap8Bits::convertToGray(){
         ColorPalleteType& theColorPallete = getColorPallete();
         for (Headers::colorTupple& colorPallete : theColorPallete) {
             uint8_t result = getRGBToGray(colorPallete.blue, colorPallete.green, colorPallete.red);
@@ -142,7 +155,7 @@ namespace BitMap{
             colorPallete.green = result;
             colorPallete.red = result;
         }
-    }
+    }*/
 
     bitMap24Bits::bitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader)
     :bitMapAbstract::bitMapAbstract(header, dibHeader) {}
@@ -151,22 +164,64 @@ namespace BitMap{
         return ColorPalleteSize;
     }
 
-    void bitMap24Bits::convertToGray() {
-        size_t height = getHeight();
-        size_t width = getWidth();
-        size_t bytesPerPixel = getBytesPerPIxel();
-        IntensityType& BitmapArray = getBitMapArray();
+
+    void bitMapAbstract::convertToGray(BitMap::bitMapAbstract* bitMap) {
+        size_t colorPalleteSize8Bits = 256;
+        size_t height = bitMap->getHeight();
+        size_t width = bitMap->getWidth();
+        size_t bytesPerPixel = bitMap->getBytesPerPIxel	();
+        IntensityType& BitmapArray = bitMap->getBitMapArray();
+
+        //initializing the gray-scale color pallete
+        ColorPalleteType theNewPallete;
+        theNewPallete.resize(colorPalleteSize8Bits);
+        for (int i = 0; i < colorPalleteSize8Bits; ++i) {
+            theNewPallete[i].red = i;
+            theNewPallete[i].green = i;
+            theNewPallete[i].blue = i;
+        }
+
+        //turning the bitmap  array into a 8 bits bitmapArray
+        IntensityType theNewBitMapArray;
+        theNewBitMapArray.resize(height * width);
         for (int row = 0; row < height ; ++row) {
             for (int col = 0; col < width * bytesPerPixel; col +=3) {
                 uint8_t blue = BitmapArray[(row * width) *  bytesPerPixel + col];
                 uint8_t green = BitmapArray[(row * width) * bytesPerPixel + col + 1];
                 uint8_t red = BitmapArray[(row * width) * bytesPerPixel + col + 2];
 
-                uint8_t result = getRGBToGray(blue, green, red);
-                BitmapArray[(row * width) * bytesPerPixel + col] = result;
-                BitmapArray[(row * width) * bytesPerPixel + col + 1] = result;
-                BitmapArray[(row * width) * bytesPerPixel + col + 2] = result;
+                uint8_t result = bitMap->getRGBToGray(blue, green, red);
+                //BitmapArray[(row * width) * bytesPerPixel + col] = result;
+                //BitmapArray[(row * width) * bytesPerPixel + col + 1] = result;
+                //BitmapArray[(row * width) * bytesPerPixel + col + 2] = result;
+                theNewBitMapArray[row * width + (col / bytesPerPixel)] = result;
             }
         }
+
+        //initializing the new header of the bitMap8Bits
+        Headers::Header theNewHeader;
+        theNewHeader.signature = Headers::BMPmagic;
+        theNewHeader.sizeOfFile = sizeof(Headers::Header) + sizeof(Headers::DIBHeader) 
+        + theNewPallete.size() * sizeof(Headers::colorTupple) + theNewBitMapArray.size();
+        theNewHeader.reserved1 = bitMap->getHeader().reserved1;
+        theNewHeader.reserved2 = bitMap->getHeader().reserved2;
+        theNewHeader.offsetPixelArray = sizeof(Headers::Header) + sizeof(Headers::DIBHeader)
+        + theNewPallete.size() * sizeof(Headers::colorTupple);
+
+        //initializing the new DIBHeader of the bitMap8Bits
+        Headers::DIBHeader theNewDIBHeader;
+        theNewDIBHeader.sizeOfHeader = Headers::Size0fDIBHeader;
+        theNewDIBHeader.height = bitMap->getDIBHeader().height;
+        theNewDIBHeader.width = bitMap->getDIBHeader().width;
+        theNewDIBHeader.bitesPerPixel = 8;
+        theNewDIBHeader.compressionIndex1 = bitMap->getDIBHeader().compressionIndex1;
+        theNewDIBHeader.compressionIndex2 = bitMap->getDIBHeader().compressionIndex2;
+        theNewDIBHeader.reserved1 = bitMap->getDIBHeader().reserved1;
+        theNewDIBHeader.reserved2 = bitMap->getDIBHeader().reserved2;
+        theNewDIBHeader.colorsInColorPallete = 0;
+        theNewDIBHeader.reserved3 = bitMap->getDIBHeader().reserved3;
+
+        delete bitMap;
+        bitMap = new bitMap8Bits(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray);
+        }
     }
-}

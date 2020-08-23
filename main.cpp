@@ -8,9 +8,9 @@
 int main() {
     //std::fstream in;
 //std::cout << "hhh" << std::endl;
-BitMap::bitMapAbstract* bitMap = Factory::BitMapFactory::fromFile("tsaban.bmp");
-bitMap->rotate90Degrees();
-bitMap->convertToGray();
+BitMap::bitMapAbstract* bitMap = Factory::BitMapFactory::fromFile("lena.bmp");
+//bitMap->rotate90Degrees();
+BitMap::bitMapAbstract::convertToGray(bitMap);
 bitMap->toFile("capara.bmp");
 //std::unique_ptr<BitMap::bitMapAbstract> BitMap = std::make_unique<BitMap::bitMapAbstract>(Factory::BitMapFactory::fromFile("tsaban.bmp"));    
 /*if(typeid(*bitMap) == typeid(BitMap::bitMap8Bits)){
