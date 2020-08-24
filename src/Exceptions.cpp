@@ -24,15 +24,15 @@ namespace FileExceptions{
     }
 
     void NULLPointerException::printException() {
-        std::cout << "Error: your object is null" << std::endl;
+        std::cout << "Error: your object is null!" << std::endl;
     }
 
     void WrongBMPFileException::printException() {
-        std::cout << "Error: the BMP file is not " << std::endl;
+        std::cout << "Error: The file is not a BMP file! " << std::endl;
     }
     
     void FileExceptions::printException() {
-        std::cout << "Error: cant read or write from the file " << std::endl;
+        std::cout << "Error: cant read or write from the file!" << std::endl;
     }
 
 }

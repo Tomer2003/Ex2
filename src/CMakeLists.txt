@@ -4,7 +4,7 @@ project(ex2 VERSION 0.1.0)
 include(CTest)
 add_compile_options(-Wall -Wextra -pedantic -Werror)
 enable_testing()
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 add_library(
     BitMapFactory
