@@ -1,8 +1,9 @@
-#include <iostream>
+
 #include "Exceptions.hpp"
 extern "C" {
 #include "matrix/ErrorCode.h"
 }
+#include <iostream>
 
 namespace Exceptions {
 

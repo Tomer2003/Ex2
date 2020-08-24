@@ -1,9 +1,9 @@
-#include <iostream>
-#include "ClassMatrix.hpp"
-#include "Exceptions.hpp"
 extern "C" {
 #include "matrix/Matrix.h"
 }
+#include "ClassMatrix.hpp"
+#include "Exceptions.hpp"
+#include <iostream>
 
 namespace matrix{
     Matrix::Matrix(const uint32_t height, const uint32_t width) :m_width(width), m_height(height){
@@ -85,7 +85,6 @@ namespace matrix{
     }
 
     Matrix::~Matrix(){
-        std::cout << "delete!" << std::endl;;
         matrix_destroy(this->m_pMatrix);
     }
         

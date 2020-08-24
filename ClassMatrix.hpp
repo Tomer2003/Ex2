@@ -1,9 +1,10 @@
 
 #pragma once
-#include <stdint.h>
 extern "C" {
 #include "matrix/Matrix.h"
 }
+#include <stdint.h>
+
 
 namespace matrix{
 
