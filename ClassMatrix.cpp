@@ -70,7 +70,6 @@ namespace matrix{
     }
 
     Matrix Matrix::operator*(const Matrix& matrix) const{
-        std::cout << "mult!" << std::endl;
         Matrix result(matrix.m_height, this->m_height);
         if(matrix.m_height == 0 || this->m_height == 0){
             throw Exceptions::ErrorMatrixSizeNotAppopriate();
@@ -80,13 +79,13 @@ namespace matrix{
     }
 
     Matrix Matrix::operator*(const double scalar) const{
-        std::cout << "scalar!" << std::endl;
         Matrix result(*this);
         Exceptions::throwAppopriateErrorIfHas(matrix_multiplyWithScalar(result.m_pMatrix, scalar));
         return result;
     }
 
     Matrix::~Matrix(){
+        std::cout << "delete!" << std::endl;;
         matrix_destroy(this->m_pMatrix);
     }
         

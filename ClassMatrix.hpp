@@ -71,7 +71,7 @@ namespace matrix{
         void matrixSetValue(const uint32_t rowIndex, const uint32_t colIndex, const double value);
 
         /**
-         * @brief Get a value to the matrix.
+         * @brief Get a value of cell of the matrix.
          * 
          * @param rowIndex -  Row index of the value to get.
          * @param colIndex - Column index of the value to get.
@@ -80,12 +80,12 @@ namespace matrix{
         double operator()(const uint32_t rowIndex, const uint32_t colIndex) const;
 
         /**
-         * @brief Add operation.
+         * @brief The function added two matrixes.
          * 
          * @param matrix - matrix.
          * @return Matrix - return matrix.
          */
-        Matrix operator+(const Matrix& matrix) const;
+       Matrix operator+(const Matrix& matrix) const;
 
         /**
          * @brief Multiply operation between two matrixes.
