@@ -38,8 +38,7 @@ void ErrorMatrixSizeNotAppopriate::printException(){
  * @param code - code to ErrorCode
  */
 void throwAppopriateErrorIfHas(ErrorCode code){
-	int errorCode = code;
-	switch (errorCode) {
+	switch ((int)code) {
 		case EXCEED_MATRIX_SIZE_ERROR:
 			throw ErrorExceedMatrix();
 		case MATRIX_ADD_ERROR:
