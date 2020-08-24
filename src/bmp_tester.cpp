@@ -14,7 +14,7 @@ void rotate_image(const std::string& imagePath, const std::string& outputPath) {
       bitMap->rotate90Degrees();
       bitMap->toFile(outputPath);
       delete bitMap;
-    } catch (FileExceptions::FileExceptions error) {
+    } catch (FileExceptions::FileExceptions& error) {
         error.printException();
     }
 
@@ -25,7 +25,7 @@ void convert_to_grayscale(const std::string& imagePath, const std::string& outpu
         BitMap::BitMapAbstract::convertToGray(bitMap);
         bitMap->toFile(outputPath);
         delete bitMap;
-    } catch (FileExceptions::FileExceptions error) {
+    } catch (FileExceptions::FileExceptions& error) {
         error.printException();
     }
 

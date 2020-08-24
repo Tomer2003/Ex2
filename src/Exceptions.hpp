@@ -11,7 +11,7 @@ public:
 
 };
 
-class OpenFileExceptionForReading : public FileExceptions {
+class OpenFileExceptionForReading : public FileExceptions{
 public:
     /**
      * @brief The function prints appopriate error message 
@@ -41,7 +41,7 @@ public:
     virtual void printException();
 };
 
-class WriteFileException : public FileExceptions {
+class WriteFileException : public FileExceptions{
 public:
     /**
      * @brief The function prints appopriate error message 
@@ -51,7 +51,7 @@ public:
     virtual void printException();
 };
 
-class FileNotBmpException : public FileExceptions {
+class FileNotBmpException : public FileExceptions{
 public:
     /**
      * @brief The function prints appopriate error message 
