@@ -1,7 +1,7 @@
 
 #pragma once
 extern "C" {
-#include "matrix/Matrix.h"
+#include "Matrix.h"
 }
 #include <stdint.h>
 

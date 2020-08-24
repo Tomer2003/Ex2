@@ -1,5 +1,5 @@
 extern "C" {
-#include "matrix/Matrix.h"
+#include "Matrix.h"
 }
 #include "ClassMatrix.hpp"
 #include "MatrixExceptions.hpp"

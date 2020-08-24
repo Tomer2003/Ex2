@@ -7,7 +7,7 @@ public:
      * reading/writing from/to the file
      * 
      */
-    void printException();
+    virtual void printException();
 
 };
 
