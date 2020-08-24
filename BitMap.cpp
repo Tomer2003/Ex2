@@ -158,7 +158,6 @@ namespace BitMap{
         return m_ColorPalleteSize;
     }
 
-
     void BitMapAbstract::convertToGray(BitMap::BitMapAbstract* bitMap) {
 
         if (bitMap == nullptr) {
@@ -166,74 +165,93 @@ namespace BitMap{
         }
 
         if (bitMap->m_DIBHeaderInfo.bitesPerPixel == 8) {
-            ColorPalleteType& theNewColorPallete = bitMap->getColorPallete();
-            if (theNewColorPallete.size() == 0) {
-              throw FileExceptions::WrongBMPFileException();
-            }
-
-            for (Headers::colorTupple& c : theNewColorPallete) {
-            auto result = bitMap->getRGBToGray(c.blue, c.green, c.red);
-            c.blue = result;
-            c.green = result;
-            c.red = result;
-            }
-        
+            BitMap8Bits::convertToGray(bitMap);
         }
-        if (bitMap->m_DIBHeaderInfo.bitesPerPixel == 24) {
-            auto colorPalleteSize8Bits = 256;
-            auto height = bitMap->getHeight();
-            auto width = bitMap->getWidth();
-            auto bytesPerPixel = bitMap->getBytesPerPIxel	();
-            IntensityType& BitmapArray = bitMap->getBitMapArray();
 
-            //initializing the gray-scale color pallete
-            ColorPalleteType theNewPallete;
-            theNewPallete.resize(colorPalleteSize8Bits);
-            for (int i = 0; i < colorPalleteSize8Bits; ++i) {
-                theNewPallete[i].red = i;
-                theNewPallete[i].green = i;
-                theNewPallete[i].blue = i;
-            }
+        if (bitMap->m_DIBHeaderInfo.bitesPerPixel == 24) {
+            BitMap24Bits::convertToGray(bitMap);
+        }
+    }
+
+    void BitMap8Bits::convertToGray(BitMap::BitMapAbstract* bitMap) {
+        if (bitMap == nullptr || bitMap->getBytesPerPIxel() != 1) {
+            throw FileExceptions::WrongBMPFileException();
+        }
+
+        ColorPalleteType& theNewColorPallete = bitMap->getColorPallete();
+        if (theNewColorPallete.size() == 0) {
+          throw FileExceptions::WrongBMPFileException();
+        }
+
+        for (Headers::colorTupple& c : theNewColorPallete) {
+        auto result = bitMap->getRGBToGray(c.blue, c.green, c.red);
+        c.blue = result;
+        c.green = result;
+        c.red = result;
+        }
+    }
+
+    void BitMap24Bits::convertToGray(BitMap::BitMapAbstract* bitMap) {
+
+        if (bitMap == nullptr || bitMap->getBytesPerPIxel() != 3) {
+            throw FileExceptions::WrongBMPFileException();
+        }
+
+        auto colorPalleteSize8Bits = 256;
+        auto height = bitMap->getHeight();
+        auto width = bitMap->getWidth();
+        auto bytesPerPixel = bitMap->getBytesPerPIxel	();
+        IntensityType& BitmapArray = bitMap->getBitMapArray();
+
+        //initializing the gray-scale color pallete
+        ColorPalleteType theNewPallete;
+        theNewPallete.resize(colorPalleteSize8Bits);
+        for (int i = 0; i < colorPalleteSize8Bits; ++i) {
+            theNewPallete[i].red = i;
+            theNewPallete[i].green = i;
+            theNewPallete[i].blue = i;
+        }
 
             //turning the bitmap  array into a 8 bits bitmapArray
             IntensityType theNewBitMapArray;
-            theNewBitMapArray.resize(height * width);
-            for (int row = 0; row < height ; ++row) {
-                for (int col = 0; col < width * bytesPerPixel; col +=3) {
-                    auto blue = BitmapArray[(row * width) *  bytesPerPixel + col];
-                    auto green = BitmapArray[(row * width) * bytesPerPixel + col + 1];
-                    auto red = BitmapArray[(row * width) * bytesPerPixel + col + 2];
+        theNewBitMapArray.resize(height * width);
+        for (int row = 0; row < height ; ++row) {
+            for (int col = 0; col < width * bytesPerPixel; col +=3) {
+                auto blue = BitmapArray[(row * width) *  bytesPerPixel + col];
+                auto green = BitmapArray[(row * width) * bytesPerPixel + col + 1];
+               auto red = BitmapArray[(row * width) * bytesPerPixel + col + 2];
 
-                    auto result = bitMap->getRGBToGray(blue, green, red);
-                    theNewBitMapArray[row * width + (col / bytesPerPixel)] = result;
-                }
+                auto result = bitMap->getRGBToGray(blue, green, red);
+                theNewBitMapArray[row * width + (col / bytesPerPixel)] = result;
             }
-
-            //initializing the new header of the bitMap8Bits
-            Headers::Header theNewHeader;
-            theNewHeader.signature = Headers::BMPmagic;
-            theNewHeader.sizeOfFile = sizeof(Headers::Header) + sizeof(Headers::DIBHeader) 
-            + theNewPallete.size() * sizeof(Headers::colorTupple) + theNewBitMapArray.size();
-            theNewHeader.reserved1 = bitMap->getHeader().reserved1;
-            theNewHeader.reserved2 = bitMap->getHeader().reserved2;
-            theNewHeader.offsetPixelArray = sizeof(Headers::Header) + sizeof(Headers::DIBHeader)
-            + theNewPallete.size() * sizeof(Headers::colorTupple);
-
-            //initializing the new DIBHeader of the bitMap8Bits
-            Headers::DIBHeader theNewDIBHeader;
-            theNewDIBHeader.sizeOfHeader = Headers::Size0fDIBHeader;
-            theNewDIBHeader.height = bitMap->getDIBHeader().height;
-            theNewDIBHeader.width = bitMap->getDIBHeader().width;
-            theNewDIBHeader.bitesPerPixel = 8;
-            theNewDIBHeader.compressionIndex1 = bitMap->getDIBHeader().compressionIndex1;
-            theNewDIBHeader.compressionIndex2 = bitMap->getDIBHeader().compressionIndex2;
-            theNewDIBHeader.reserved1 = bitMap->getDIBHeader().reserved1;
-            theNewDIBHeader.reserved2 = bitMap->getDIBHeader().reserved2;
-            theNewDIBHeader.colorsInColorPallete = 0;
-            theNewDIBHeader.reserved3 = bitMap->getDIBHeader().reserved3;
-
-            delete bitMap;
-            bitMap = new BitMap8Bits(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray);
         }
+
+        //initializing the new header of the bitMap8Bits
+        Headers::Header theNewHeader;
+        theNewHeader.signature = Headers::BMPmagic;
+        theNewHeader.sizeOfFile = sizeof(Headers::Header) + sizeof(Headers::DIBHeader) 
+        + theNewPallete.size() * sizeof(Headers::colorTupple) + theNewBitMapArray.size();
+        theNewHeader.reserved1 = bitMap->getHeader().reserved1;
+        theNewHeader.reserved2 = bitMap->getHeader().reserved2;
+        theNewHeader.offsetPixelArray = sizeof(Headers::Header) + sizeof(Headers::DIBHeader)
+        + theNewPallete.size() * sizeof(Headers::colorTupple);
+
+        //initializing the new DIBHeader of the bitMap8Bits
+       Headers::DIBHeader theNewDIBHeader;
+        theNewDIBHeader.sizeOfHeader = Headers::Size0fDIBHeader;
+        theNewDIBHeader.height = bitMap->getDIBHeader().height;
+        theNewDIBHeader.width = bitMap->getDIBHeader().width;
+        theNewDIBHeader.bitesPerPixel = 8;
+        theNewDIBHeader.compressionIndex1 = bitMap->getDIBHeader().compressionIndex1;
+        theNewDIBHeader.compressionIndex2 = bitMap->getDIBHeader().compressionIndex2;
+        theNewDIBHeader.reserved1 = bitMap->getDIBHeader().reserved1;
+        theNewDIBHeader.reserved2 = bitMap->getDIBHeader().reserved2;
+        theNewDIBHeader.colorsInColorPallete = 0;
+        theNewDIBHeader.reserved3 = bitMap->getDIBHeader().reserved3;
+
+        delete bitMap;
+        bitMap = new BitMap8Bits(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray);
+
     }
+
 }

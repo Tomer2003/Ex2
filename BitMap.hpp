@@ -64,6 +64,8 @@ public:
     BitMap8Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
 
     size_t virtual getColorPalleteSize() const;
+
+    static void convertToGray(BitMap::BitMapAbstract* bitMap);
 };
 
 
@@ -75,5 +77,7 @@ public:
     BitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader);
 
     size_t virtual getColorPalleteSize() const;
+
+    static void convertToGray(BitMap::BitMapAbstract* bitMap);
 };
 }
