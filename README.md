@@ -4,6 +4,9 @@
 in this project, We designed the matrix class with a class that delegates the functions in the library of the so and in addition we added an exceptions for errors.
 We implemented the rule of 5, and test the new methods.
 
+- class class that delegates the functions - ClassMatrix
+- exceptions for errors - MatrixExceptions
+
 ### part 2
 
 in this project, we read the information from a BMPfile, saved it in a BMP-object and implemented 2 functions:
