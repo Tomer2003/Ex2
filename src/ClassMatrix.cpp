@@ -2,7 +2,7 @@ extern "C" {
 #include "matrix/Matrix.h"
 }
 #include "ClassMatrix.hpp"
-#include "Exceptions.hpp"
+#include "MatrixExceptions.hpp"
 #include <iostream>
 
 namespace matrix{

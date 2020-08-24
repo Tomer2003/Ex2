@@ -1,5 +1,5 @@
 
-#include "Exceptions.hpp"
+#include "MatrixExceptions.hpp"
 extern "C" {
 #include "matrix/ErrorCode.h"
 }
