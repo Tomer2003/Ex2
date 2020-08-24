@@ -35,9 +35,16 @@ add_library(
     Exceptions.cpp
     Exceptions.hpp
 )
+
+add_library(
+    BMPFunctions
+    BitMapHelpFunctions.cpp
+    BitMapHelpFunctions.hpp
+)
+
 add_executable(ex2 main.cpp)
 
-target_link_libraries(ex2 bmp_tester BitMapFactory BitMap Headers Exceptions)
+target_link_libraries(ex2 bmp_tester BitMapFactory BitMap Headers Exceptions BMPFunctions)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

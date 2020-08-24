@@ -1,5 +1,6 @@
 #include "BitMap.hpp"
 #include "Exceptions.hpp"
+#include "BitMapHelpFunctions.hpp"
 #include <cstring>
 namespace BitMap{
     //constructor
@@ -221,20 +222,16 @@ namespace BitMap{
         //initializing the gray-scale color pallete
         ColorPalleteType theNewPallete;
         theNewPallete.resize(colorPalleteSize8Bits);
-        for (int i = 0; i < colorPalleteSize8Bits; ++i) {
-            theNewPallete[i].red = i;
-            theNewPallete[i].green = i;
-            theNewPallete[i].blue = i;
-        }
+        BMPFunctions::getBlackAndWhitePallete(theNewPallete);
 
-            //turning the bitmap  array into a 8 bits bitmapArray
-            IntensityType theNewBitMapArray;
+        //turning the bitmap  array into a 8 bits bitmapArray
+        IntensityType theNewBitMapArray;
         theNewBitMapArray.resize(height * width);
         for (size_t row = 0; row < height ; ++row) {
             for (size_t col = 0; col < width * bytesPerPixel; col +=3) {
                 auto blue = BitmapArray[(row * width) *  bytesPerPixel + col];
                 auto green = BitmapArray[(row * width) * bytesPerPixel + col + 1];
-               auto red = BitmapArray[(row * width) * bytesPerPixel + col + 2];
+                auto red = BitmapArray[(row * width) * bytesPerPixel + col + 2];
 
                 auto result = bitMap->getRGBToGray(blue, green, red);
                 theNewBitMapArray[row * width + (col / bytesPerPixel)] = result;
@@ -243,26 +240,12 @@ namespace BitMap{
 
         //initializing the new header of the bitMap8Bits
         Headers::Header theNewHeader;
-        theNewHeader.signature = Headers::BMPmagic;
-        theNewHeader.sizeOfFile = sizeof(Headers::Header) + sizeof(Headers::DIBHeader) 
-        + theNewPallete.size() * sizeof(Headers::colorTupple) + theNewBitMapArray.size();
-        theNewHeader.reserved1 = bitMap->getHeader().reserved1;
-        theNewHeader.reserved2 = bitMap->getHeader().reserved2;
-        theNewHeader.offsetPixelArray = sizeof(Headers::Header) + sizeof(Headers::DIBHeader)
-        + theNewPallete.size() * sizeof(Headers::colorTupple);
+        BMPFunctions::init8BitsBMPHeader(theNewHeader, bitMap, theNewPallete, theNewBitMapArray);
+
 
         //initializing the new DIBHeader of the bitMap8Bits
-       Headers::DIBHeader theNewDIBHeader;
-        theNewDIBHeader.sizeOfHeader = Headers::Size0fDIBHeader;
-        theNewDIBHeader.height = bitMap->getDIBHeader().height;
-        theNewDIBHeader.width = bitMap->getDIBHeader().width;
-        theNewDIBHeader.bitesPerPixel = 8;
-        theNewDIBHeader.compressionIndex1 = bitMap->getDIBHeader().compressionIndex1;
-        theNewDIBHeader.compressionIndex2 = bitMap->getDIBHeader().compressionIndex2;
-        theNewDIBHeader.reserved1 = bitMap->getDIBHeader().reserved1;
-        theNewDIBHeader.reserved2 = bitMap->getDIBHeader().reserved2;
-        theNewDIBHeader.colorsInColorPallete = 0;
-        theNewDIBHeader.reserved3 = bitMap->getDIBHeader().reserved3;
+        Headers::DIBHeader theNewDIBHeader;
+        BMPFunctions::init8BitsBMP_DIBHeader(theNewDIBHeader, bitMap);
 
         delete bitMap;
         bitMap = new BitMap8Bits(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray);
