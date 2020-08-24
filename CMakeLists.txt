@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(test1 VERSION 0.1.0)
+project(ex2 VERSION 0.1.0)
 
 include(CTest)
+add_compile_options(-Wall -Wextra -pedantic -Werror)
 enable_testing()
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_library(
     BitMapFactory
@@ -33,10 +35,9 @@ add_library(
     Exceptions.cpp
     Exceptions.hpp
 )
+add_executable(ex2 main.cpp)
 
-add_executable(test1 main.cpp)
-
-target_link_libraries(test1 bmp_tester BitMapFactory BitMap Headers Exceptions)
+target_link_libraries(ex2 bmp_tester BitMapFactory BitMap Headers Exceptions)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

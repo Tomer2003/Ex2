@@ -20,8 +20,14 @@ struct Header {
 
 
 public:
-
-void fromfStream(std::ifstream& imageFile);    
+    /**
+     * @brief reads the information of the header from the given file anfd varify 
+     * that the info is correct
+     * 
+     * @param imageFile the given bmp file we want to read from
+     * 
+    */
+    void fromfStream(std::ifstream& imageFile);    
 };
 
 
@@ -41,8 +47,14 @@ struct DIBHeader
     uint32_t reserved3;
 
 public: 
-       
-void fromfStream(std::ifstream& imageFile);
+    /**
+     * @brief reads the information of the DIBheader from the given file anfd varify 
+     * that the info is correct
+     * 
+     * @param imageFile the given bmp file we want to read from
+     * 
+    */
+    void fromfStream(std::ifstream& imageFile);
 };
 
 

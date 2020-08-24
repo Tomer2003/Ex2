@@ -4,8 +4,10 @@
 #include <iostream>
 #include <fstream>
 namespace Factory{
-BitMap::BitMapAbstract* BitMapFactory::fromFile(const std::string& imagePath){
-       std::ifstream imageFile;
+
+    BitMap::BitMapAbstract* BitMapFactory::fromFile(const std::string& imagePath){
+
+        std::ifstream imageFile;
         imageFile.open(imagePath, std::ios::in);
         if (imageFile.fail()) {
            throw FileExceptions::OpenFileExceptionForReading();
@@ -30,5 +32,5 @@ BitMap::BitMapAbstract* BitMapFactory::fromFile(const std::string& imagePath){
         
         bitMap->fromFile(imageFile);
         return bitMap;
-}
+    }
 }

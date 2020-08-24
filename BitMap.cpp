@@ -2,14 +2,17 @@
 #include "Exceptions.hpp"
 #include <cstring>
 namespace BitMap{
+    //constructor
     BitMapAbstract::BitMapAbstract(const Headers::Header& headerInfo, const Headers::DIBHeader& DIBHeaderInfo)
-    : m_headerInfo(headerInfo), m_DIBHeaderInfo(DIBHeaderInfo){ }
+    : m_headerInfo(headerInfo), m_DIBHeaderInfo(DIBHeaderInfo){}
 
+    //constructor
     BitMapAbstract::BitMapAbstract(const Headers::Header& headerInfo,
     const Headers::DIBHeader& DIBHeaderInfo, ColorPalleteType& colorPallete,
     IntensityType& bitMapArray) : m_headerInfo(headerInfo), m_DIBHeaderInfo(DIBHeaderInfo),
-    m_colorPallete(colorPallete), m_byteArray(bitMapArray){};
+    m_colorPallete(colorPallete), m_byteArray(bitMapArray){}
 
+    //reading the info from the file
     void BitMapAbstract::fromFile(std::ifstream& imageFile) {
         size_t colorPalleteSize = 0;
         if (m_DIBHeaderInfo.colorsInColorPallete == 0) {
@@ -41,11 +44,9 @@ namespace BitMap{
         }
     }
 
-    
+    //writing the info to the new file
     void BitMapAbstract::toFile(const std::string imagePath) {
-        if (this == nullptr) {
-            throw FileExceptions::NULLPointerException();
-        }
+
         std::ofstream imageFile;
         imageFile.open(imagePath, std::ios::binary | std::ios::trunc);
         if (!imageFile.is_open()) {
@@ -55,7 +56,7 @@ namespace BitMap{
         if ((m_headerInfo.signature != Headers::BMPmagic) || (m_DIBHeaderInfo.sizeOfHeader != Headers::Size0fDIBHeader)) {
             throw FileExceptions::WrongBMPFileException();
         }
-
+        //writing the headers and the collorPallete
         imageFile.write((char*) &m_headerInfo, sizeof(Headers::Header));
         imageFile.write((char*) &m_DIBHeaderInfo, sizeof(Headers::DIBHeader));
         auto collorPalleteSize = m_colorPallete.size();
@@ -73,8 +74,8 @@ namespace BitMap{
         if (width % 4 != 0) {
             peddingPerLine = 4 - (width % 4);
         }
-
-        for (int row = 0; row < height; ++row) {
+        //writing the bitMapArray
+        for (size_t row = 0; row < height; ++row) {
             imageFile.write((char*) &m_byteArray[row * width * bytesPerPixel], width * bytesPerPixel);
             imageFile.write(pedding, peddingPerLine);
         } 
@@ -89,9 +90,7 @@ namespace BitMap{
     }
 
     void BitMapAbstract::rotate90Degrees() {
-        if (this == nullptr) {
-            throw FileExceptions::NULLPointerException();
-        }
+    
         IntensityType tempByteArray;
         tempByteArray.resize(m_byteArray.size());
         auto height = m_DIBHeaderInfo.height;
@@ -102,8 +101,8 @@ namespace BitMap{
 
         //rotating the matix of the pixels by 90 degrees
         //the calculations inside the for switch the locations of the pixels inside the matrix
-        for (int row = 0; row < width; ++row) {
-            for (int col = 0; col < height; ++col) {
+        for (size_t row = 0; row < width; ++row) {
+            for (size_t col = 0; col < height; ++col) {
                 uint8_t* src = &m_byteArray[(col * width + width - row) * bytesPerPixel];
                 uint8_t* des = &tempByteArray[(row * height + col) * bytesPerPixel];
                 memcpy(des, src, bytesPerPixel);
@@ -123,15 +122,19 @@ namespace BitMap{
     size_t BitMapAbstract::getHeight() const{
         return m_DIBHeaderInfo.height;
     }
+
     size_t BitMapAbstract::getWidth() const{
         return m_DIBHeaderInfo.width;
     }
+
     BitMapAbstract::ColorPalleteType& BitMapAbstract::getColorPallete() {
         return m_colorPallete;
     }
+
     size_t BitMapAbstract::getBytesPerPIxel() const {
         return m_DIBHeaderInfo.bitesPerPixel / 8;
     }
+
     BitMapAbstract::IntensityType& BitMapAbstract::getBitMapArray() {
         return m_byteArray;
     }
@@ -141,20 +144,32 @@ namespace BitMap{
         return (uint8_t)result;
     }
 
+    size_t BitMapAbstract::getColorPalleteSize() const {
+        if (m_DIBHeaderInfo.bitesPerPixel == 8) {
+            return BitMap8Bits::getColorPalleteSize();
+        }
+        if (m_DIBHeaderInfo.bitesPerPixel == 24) {
+            return BitMap24Bits::getColorPalleteSize();
+        }
+        return 0;
+    }
+
+
+
     BitMap8Bits::BitMap8Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader)
     :BitMapAbstract::BitMapAbstract(header, dibHeader){}
 
-    size_t BitMap8Bits::getColorPalleteSize() const {
+    size_t BitMap8Bits::getColorPalleteSize() {
         return m_ColorPalleteSize;
     }
 
     BitMap8Bits::BitMap8Bits(Headers::Header& theNewHeader, Headers::DIBHeader& theNewDIBHeader, ColorPalleteType& theNewPallete,
-    IntensityType& theNewBitMapArray) : BitMapAbstract(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray){};
+    IntensityType& theNewBitMapArray) : BitMapAbstract(theNewHeader, theNewDIBHeader, theNewPallete, theNewBitMapArray){}
 
     BitMap24Bits::BitMap24Bits(const Headers::Header& header, const Headers::DIBHeader& dibHeader)
     :BitMapAbstract::BitMapAbstract(header, dibHeader) {}
 
-    size_t BitMap24Bits::getColorPalleteSize() const {
+    size_t BitMap24Bits::getColorPalleteSize() {
         return m_ColorPalleteSize;
     }
 
@@ -182,7 +197,7 @@ namespace BitMap{
         if (theNewColorPallete.size() == 0) {
           throw FileExceptions::WrongBMPFileException();
         }
-
+        //turning every collorTupple into gray
         for (Headers::colorTupple& c : theNewColorPallete) {
         auto result = bitMap->getRGBToGray(c.blue, c.green, c.red);
         c.blue = result;
@@ -215,8 +230,8 @@ namespace BitMap{
             //turning the bitmap  array into a 8 bits bitmapArray
             IntensityType theNewBitMapArray;
         theNewBitMapArray.resize(height * width);
-        for (int row = 0; row < height ; ++row) {
-            for (int col = 0; col < width * bytesPerPixel; col +=3) {
+        for (size_t row = 0; row < height ; ++row) {
+            for (size_t col = 0; col < width * bytesPerPixel; col +=3) {
                 auto blue = BitmapArray[(row * width) *  bytesPerPixel + col];
                 auto green = BitmapArray[(row * width) * bytesPerPixel + col + 1];
                auto red = BitmapArray[(row * width) * bytesPerPixel + col + 2];

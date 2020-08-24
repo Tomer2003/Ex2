@@ -1,34 +1,39 @@
 #include "Headers.hpp"
+#include "Exceptions.hpp"
+
 namespace Headers{
 
+//reading the header and checking that he is valid 
 void Header::fromfStream(std::ifstream& imageFile){
-    imageFile.read((char *) this,sizeof(Header));
     if (!imageFile) {
-        return; /*exception*/
+       throw FileExceptions::OpenFileExceptionForReading();
     }
+    imageFile.read((char *) this,sizeof(Header));
+
     if (signature != BMPmagic) {
-        return; /*exception*/
+        throw FileExceptions::WrongBMPFileException();
     }
     size_t pos = imageFile.tellg();
     imageFile.seekg(0, std::ios::end);
     size_t end = imageFile.tellg();
     imageFile.seekg(pos, std::ios::beg);
     if (sizeOfFile != end) {
-            return; /*exception*/
+           throw FileExceptions::WrongBMPFileException();
     }
 }
 
-
+//reading the DIBheader and checking that he is valid 
 void DIBHeader::fromfStream(std::ifstream& imageFile){
-       imageFile.read((char *) this, sizeof(DIBHeader));
     if (!imageFile) {
-        return; /*exception*/
+        throw FileExceptions::OpenFileExceptionForReading();    
     }
+    imageFile.read((char *) this, sizeof(DIBHeader));
+
     if(this->sizeOfHeader != sizeof(*this)) {
-          return; /*exception*/
+        throw FileExceptions::WrongBMPFileException();        
     }
     if (this->colorsInColorPallete != 0 && this->bitesPerPixel != 8) {
-         return; /*exception*/
+        throw FileExceptions::WrongBMPFileException();
     }
 }
 

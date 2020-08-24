@@ -1,5 +1,6 @@
-#include <iostream>
 #include "Exceptions.hpp"
+#include <iostream>
+
 
 namespace FileExceptions{
     void OpenFileExceptionForReading::printException() {
@@ -21,13 +22,17 @@ namespace FileExceptions{
     void FileNotBmpException::printException() {
         std::cout << "Error: The file is not a bmp file!" << std::endl;
     }
+
     void NULLPointerException::printException() {
         std::cout << "Error: your object is null" << std::endl;
     }
+
     void WrongBMPFileException::printException() {
         std::cout << "Error: the BMP file is not " << std::endl;
     }
+    
     void FileExceptions::printException() {
-        std::cout << "unknown Error occurd" << std::endl;
+        std::cout << "Error: cant read or write from the file " << std::endl;
     }
+
 }

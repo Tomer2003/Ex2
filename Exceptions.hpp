@@ -3,10 +3,11 @@ namespace FileExceptions{
 class FileExceptions {
 public:
     /**
-     * @brief The function prints appopriate error message if something failes
+     * @brief The function prints appopriate error message if something failes in the 
+     * reading/writing from/to the file
      * 
      */
-    virtual void printException();
+    void printException();
 
 };
 
